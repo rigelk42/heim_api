@@ -1,0 +1,8 @@
+.vscode
+.venv
+gcp
+__pycache__
+cloud-sql-proxy
+.env
+static
+README.md
