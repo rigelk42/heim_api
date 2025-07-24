@@ -14,7 +14,15 @@ if os.path.exists(env_file):
 
 SECRET_KEY = "pjq3(7398+-nqdz^sj6$w#bikjww29m+p%ss^b(1u)&_q(*-%4"
 DEBUG = True
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:4200",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -112,7 +120,3 @@ SIMPLE_JWT = {
 
 CORS_ORIGIN_ALLOW_ALL = False
 USE_THOUSAND_SEPARATOR = True
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-]

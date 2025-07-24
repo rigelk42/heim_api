@@ -9,7 +9,9 @@ class Customer(models.Model):
     """
 
     created_at = models.DateTimeField(auto_now_add=True)
-    customer_id = models.CharField(max_length=14, unique=True, editable=False, primary_key=True)
+    customer_id = models.CharField(
+        max_length=14, unique=True, editable=False, primary_key=True
+    )
     email = models.EmailField(max_length=256, unique=True)
     first_name = models.CharField(max_length=32)
     is_active = models.BooleanField(default=False)
