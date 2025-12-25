@@ -1,0 +1,37 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=heim_core.settings
+      - DATABASE_URL=postgres://heim_db_dev:heim_db_dev@db:5432/heim_db_dev
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=heim_db_dev
+      - POSTGRES_USER=heim_db_dev
+      - POSTGRES_PASSWORD=heim_db_dev
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
