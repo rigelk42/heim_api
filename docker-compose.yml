@@ -1,19 +1,21 @@
 services:
-  web:
+  api:
     build: .
+    container_name: heim_api
     ports:
       - "8000:8000"
     volumes:
       - ./src:/app
     environment:
       - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=heim_core.settings
+      - DJANGO_SETTINGS_MODULE=core.settings
       - DATABASE_URL=postgres://heim_db_dev:heim_db_dev@db:5432/heim_db_dev
     depends_on:
       - db
 
   db:
     image: postgres:17-alpine
+    container_name: heim_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -25,13 +27,17 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    container_name: heim_pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - db
 
 volumes:
   postgres_data:
+  pgadmin_data:
