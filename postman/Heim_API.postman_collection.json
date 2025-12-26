@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "heim-api-collection",
+		"name": "Heim API",
+		"description": "API collection for Heim - Customer Management and Motor Vehicle Services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "List Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{customers_url}}",
+							"host": ["{{customers_url}}"]
+						},
+						"description": "List all customers"
+					}
+				},
+				{
+					"name": "Search Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{customers_url}}?q={{search_query}}",
+							"host": ["{{customers_url}}"],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{search_query}}"
+								}
+							]
+						},
+						"description": "Search customers by name or email"
+					}
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"given_names\": \"John\",\n    \"surnames\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"555-1234\"\n}"
+						},
+						"url": {
+							"raw": "{{customers_url}}",
+							"host": ["{{customers_url}}"]
+						},
+						"description": "Create a new customer"
+					}
+				},
+				{
+					"name": "Get Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{customers_url}}/{{customer_id}}/",
+							"host": ["{{customers_url}}"],
+							"path": ["{{customer_id}}", ""]
+						},
+						"description": "Get a customer by ID"
+					}
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"given_names\": \"Johnny\",\n    \"phone\": \"555-5678\"\n}"
+						},
+						"url": {
+							"raw": "{{customers_url}}/{{customer_id}}/",
+							"host": ["{{customers_url}}"],
+							"path": ["{{customer_id}}", ""]
+						},
+						"description": "Update a customer's details"
+					}
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{customers_url}}/{{customer_id}}/",
+							"host": ["{{customers_url}}"],
+							"path": ["{{customer_id}}", ""]
+						},
+						"description": "Delete a customer"
+					}
+				}
+			],
+			"description": "Customer management endpoints"
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "List Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}",
+							"host": ["{{vehicles_url}}"]
+						},
+						"description": "List all motor vehicles"
+					}
+				},
+				{
+					"name": "Search Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}?q={{search_query}}",
+							"host": ["{{vehicles_url}}"],
+							"query": [
+								{
+									"key": "q",
+									"value": "{{search_query}}"
+								}
+							]
+						},
+						"description": "Search vehicles by VIN, make, model, or license plate"
+					}
+				},
+				{
+					"name": "List Vehicles by Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}?status={{vehicle_status}}",
+							"host": ["{{vehicles_url}}"],
+							"query": [
+								{
+									"key": "status",
+									"value": "{{vehicle_status}}"
+								}
+							]
+						},
+						"description": "List vehicles by status (active, sold, scrapped, stolen)"
+					}
+				},
+				{
+					"name": "Create Vehicle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"color\": \"Blue\",\n    \"fuel_type\": \"petrol\",\n    \"transmission\": \"automatic\",\n    \"engine_capacity_cc\": 2000,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\"\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}",
+							"host": ["{{vehicles_url}}"]
+						},
+						"description": "Register a new motor vehicle"
+					}
+				},
+				{
+					"name": "Get Vehicle",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", ""]
+						},
+						"description": "Get a vehicle by ID"
+					}
+				},
+				{
+					"name": "Get Vehicle by VIN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/vin/{{vehicle_vin}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["vin", "{{vehicle_vin}}", ""]
+						},
+						"description": "Get a vehicle by VIN"
+					}
+				},
+				{
+					"name": "Update Vehicle",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"color\": \"Red\",\n    \"license_plate\": \"XYZ789\",\n    \"license_plate_state\": \"NY\"\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", ""]
+						},
+						"description": "Update a vehicle's details"
+					}
+				},
+				{
+					"name": "Update Vehicle Mileage",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mileage_km\": 55000\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/mileage/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", "mileage", ""]
+						},
+						"description": "Update a vehicle's mileage"
+					}
+				},
+				{
+					"name": "Change Vehicle Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"sold\"\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/status/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", "status", ""]
+						},
+						"description": "Change a vehicle's status (active, sold, scrapped, stolen)"
+					}
+				},
+				{
+					"name": "Delete Vehicle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", ""]
+						},
+						"description": "Delete a vehicle"
+					}
+				}
+			],
+			"description": "Motor vehicle service endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "customer_id",
+			"value": "1"
+		},
+		{
+			"key": "vehicle_id",
+			"value": "1"
+		},
+		{
+			"key": "vehicle_vin",
+			"value": "1HGCM82633A004352"
+		},
+		{
+			"key": "search_query",
+			"value": "Honda"
+		},
+		{
+			"key": "vehicle_status",
+			"value": "active"
+		}
+	]
+}
