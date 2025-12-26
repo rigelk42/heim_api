@@ -9,8 +9,8 @@ It includes:
 """
 
 from .events import (DomainEvent, MotorVehicleCreated, MotorVehicleDeleted,
-                     MotorVehicleMileageUpdated, MotorVehicleStatusChanged,
-                     MotorVehicleUpdated)
+                     MotorVehicleMileageUpdated, MotorVehicleOwnerChanged,
+                     MotorVehicleStatusChanged, MotorVehicleUpdated)
 from .exceptions import (InvalidMileageUpdate, MotorVehicleAlreadyExists,
                          MotorVehicleNotFound, MotorVehicleServiceException)
 from .models import MotorVehicle
@@ -29,6 +29,7 @@ __all__ = [
     "MotorVehicleUpdated",
     "MotorVehicleMileageUpdated",
     "MotorVehicleStatusChanged",
+    "MotorVehicleOwnerChanged",
     "MotorVehicleDeleted",
     # Exceptions
     "MotorVehicleServiceException",

@@ -92,6 +92,21 @@ class MotorVehicleStatusChanged(DomainEvent):
 
 
 @dataclass(frozen=True)
+class MotorVehicleOwnerChanged(DomainEvent):
+    """Event raised when a vehicle's owner changes.
+
+    Attributes:
+        vehicle_id: The ID of the vehicle.
+        old_owner_id: The ID of the previous owner (None if unassigned).
+        new_owner_id: The ID of the new owner (None if unassigned).
+    """
+
+    vehicle_id: int = 0
+    old_owner_id: int | None = None
+    new_owner_id: int | None = None
+
+
+@dataclass(frozen=True)
 class MotorVehicleDeleted(DomainEvent):
     """Event raised when a motor vehicle is deleted.
 

@@ -9,10 +9,12 @@ Queries represent requests for data without side effects.
 
 from .commands import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
                        DeleteMotorVehicleCommand, MotorVehicleCommandHandler,
-                       UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand)
+                       TransferOwnershipCommand, UpdateMotorVehicleCommand,
+                       UpdateMotorVehicleMileageCommand)
 from .queries import (GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-                      ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
-                      MotorVehicleQueryHandler, SearchMotorVehiclesQuery)
+                      ListMotorVehiclesByOwnerQuery, ListMotorVehiclesByStatusQuery,
+                      ListMotorVehiclesQuery, MotorVehicleQueryHandler,
+                      SearchMotorVehiclesQuery)
 
 __all__ = [
     # Commands
@@ -21,12 +23,14 @@ __all__ = [
     "UpdateMotorVehicleMileageCommand",
     "ChangeMotorVehicleStatusCommand",
     "DeleteMotorVehicleCommand",
+    "TransferOwnershipCommand",
     "MotorVehicleCommandHandler",
     # Queries
     "GetMotorVehicleQuery",
     "GetMotorVehicleByVINQuery",
     "ListMotorVehiclesQuery",
     "ListMotorVehiclesByStatusQuery",
+    "ListMotorVehiclesByOwnerQuery",
     "SearchMotorVehiclesQuery",
     "MotorVehicleQueryHandler",
 ]

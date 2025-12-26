@@ -8,6 +8,7 @@ and infrastructure layer.
 from motor_vehicle_services.domain.events import (MotorVehicleCreated,
                                                   MotorVehicleDeleted,
                                                   MotorVehicleMileageUpdated,
+                                                  MotorVehicleOwnerChanged,
                                                   MotorVehicleStatusChanged,
                                                   MotorVehicleUpdated)
 from motor_vehicle_services.domain.exceptions import (MotorVehicleAlreadyExists,
@@ -18,8 +19,8 @@ from motor_vehicle_services.infrastructure.event_dispatcher import EventDispatch
 from motor_vehicle_services.infrastructure.repositories import MotorVehicleRepository
 
 from .dtos import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-                   DeleteMotorVehicleCommand, UpdateMotorVehicleCommand,
-                   UpdateMotorVehicleMileageCommand)
+                   DeleteMotorVehicleCommand, TransferOwnershipCommand,
+                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand)
 
 
 class MotorVehicleCommandHandler:
@@ -82,6 +83,7 @@ class MotorVehicleCommandHandler:
             mileage_km=command.mileage_km,
             license_plate=command.license_plate,
             license_plate_state=command.license_plate_state,
+            owner_id=command.owner_id,
         )
 
         self.event_dispatcher.publish(
@@ -263,3 +265,50 @@ class MotorVehicleCommandHandler:
                 vin=vin,
             )
         )
+
+    def handle_transfer_ownership(
+        self, command: TransferOwnershipCommand
+    ) -> MotorVehicle:
+        """Transfer a vehicle's ownership to a new owner.
+
+        Publishes a MotorVehicleOwnerChanged event on success.
+
+        Args:
+            command: The transfer ownership command.
+
+        Returns:
+            The updated MotorVehicle.
+
+        Raises:
+            MotorVehicleNotFound: If the vehicle does not exist.
+        """
+        vehicle = self.repository.get_by_id(command.vehicle_id)
+        if not vehicle:
+            raise MotorVehicleNotFound(command.vehicle_id)
+
+        old_owner_id = vehicle.owner_id if vehicle.owner else None
+
+        if command.new_owner_id is not None:
+            from customer_management.domain.models import Customer
+
+            owner = Customer.objects.filter(id=command.new_owner_id).first()
+            if not owner:
+                raise ValueError(f"Customer with ID {command.new_owner_id} not found")
+            vehicle.owner = owner
+        else:
+            vehicle.owner = None
+
+        vehicle = self.repository.save(vehicle)
+
+        new_owner_id = vehicle.owner_id if vehicle.owner else None
+
+        if old_owner_id != new_owner_id:
+            self.event_dispatcher.publish(
+                MotorVehicleOwnerChanged(
+                    vehicle_id=vehicle.id,
+                    old_owner_id=old_owner_id,
+                    new_owner_id=new_owner_id,
+                )
+            )
+
+        return vehicle

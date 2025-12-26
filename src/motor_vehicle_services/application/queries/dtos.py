@@ -62,3 +62,14 @@ class SearchMotorVehiclesQuery:
     """
 
     query: str
+
+
+@dataclass(frozen=True)
+class ListMotorVehiclesByOwnerQuery:
+    """Query to list all motor vehicles owned by a specific customer.
+
+    Attributes:
+        owner_id: The ID of the customer.
+    """
+
+    owner_id: int

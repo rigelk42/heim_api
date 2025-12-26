@@ -68,6 +68,17 @@ class MotorVehicleRepository:
         """
         return MotorVehicle.objects.filter(status=status)
 
+    def get_by_owner(self, owner_id: int) -> QuerySet[MotorVehicle]:
+        """Retrieve all motor vehicles owned by a specific customer.
+
+        Args:
+            owner_id: The ID of the customer.
+
+        Returns:
+            A QuerySet of vehicles owned by this customer.
+        """
+        return MotorVehicle.objects.filter(owner_id=owner_id)
+
     def search(self, query: str) -> QuerySet[MotorVehicle]:
         """Search motor vehicles by VIN, make, model, or license plate.
 
@@ -117,6 +128,7 @@ class MotorVehicleRepository:
         mileage_km: int = 0,
         license_plate: str = "",
         license_plate_state: str = "",
+        owner_id: int | None = None,
     ) -> MotorVehicle:
         """Create a new motor vehicle.
 
@@ -132,6 +144,7 @@ class MotorVehicleRepository:
             mileage_km: Current mileage in kilometers.
             license_plate: License plate number.
             license_plate_state: License plate issuing state.
+            owner_id: ID of the owning customer.
 
         Returns:
             The newly created MotorVehicle.
@@ -151,6 +164,7 @@ class MotorVehicleRepository:
             mileage_km=mileage_km,
             license_plate=license_plate.upper() if license_plate else "",
             license_plate_state=license_plate_state,
+            owner_id=owner_id,
         )
         vehicle.full_clean()
         vehicle.save()

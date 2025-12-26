@@ -19,5 +19,15 @@ urlpatterns = [
         views.MotorVehicleStatusView.as_view(),
         name="status",
     ),
+    path(
+        "<int:vehicle_id>/owner/",
+        views.MotorVehicleOwnerView.as_view(),
+        name="owner",
+    ),
     path("vin/<str:vin>/", views.MotorVehicleByVINView.as_view(), name="by-vin"),
+    path(
+        "owner/<int:owner_id>/",
+        views.MotorVehiclesByOwnerView.as_view(),
+        name="by-owner",
+    ),
 ]

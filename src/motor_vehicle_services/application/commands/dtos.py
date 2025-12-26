@@ -24,6 +24,7 @@ class CreateMotorVehicleCommand:
         mileage_km: Current mileage in kilometers.
         license_plate: License plate number (optional).
         license_plate_state: Issuing state/province (optional).
+        owner_id: ID of the customer who owns this vehicle (optional).
     """
 
     vin: str
@@ -37,6 +38,7 @@ class CreateMotorVehicleCommand:
     mileage_km: int = 0
     license_plate: str = ""
     license_plate_state: str = ""
+    owner_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -99,3 +101,16 @@ class DeleteMotorVehicleCommand:
     """
 
     vehicle_id: int
+
+
+@dataclass(frozen=True)
+class TransferOwnershipCommand:
+    """Command to transfer a vehicle's ownership to a new owner.
+
+    Attributes:
+        vehicle_id: The ID of the vehicle.
+        new_owner_id: The ID of the new owner (None to unassign).
+    """
+
+    vehicle_id: int
+    new_owner_id: int | None = None

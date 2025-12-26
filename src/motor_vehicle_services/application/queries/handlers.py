@@ -11,8 +11,8 @@ from motor_vehicle_services.domain.models import MotorVehicle
 from motor_vehicle_services.infrastructure.repositories import MotorVehicleRepository
 
 from .dtos import (GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-                   ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
-                   SearchMotorVehiclesQuery)
+                   ListMotorVehiclesByOwnerQuery, ListMotorVehiclesByStatusQuery,
+                   ListMotorVehiclesQuery, SearchMotorVehiclesQuery)
 
 
 class MotorVehicleQueryHandler:
@@ -102,3 +102,16 @@ class MotorVehicleQueryHandler:
             A QuerySet of matching vehicles.
         """
         return self.repository.search(query.query)
+
+    def handle_list_by_owner(
+        self, query: ListMotorVehiclesByOwnerQuery
+    ) -> QuerySet[MotorVehicle]:
+        """List motor vehicles by owner.
+
+        Args:
+            query: The list by owner query.
+
+        Returns:
+            A QuerySet of vehicles owned by the specified customer.
+        """
+        return self.repository.get_by_owner(query.owner_id)

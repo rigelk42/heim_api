@@ -13,11 +13,13 @@ from motor_vehicle_services.application import (ChangeMotorVehicleStatusCommand,
                                                 DeleteMotorVehicleCommand,
                                                 GetMotorVehicleByVINQuery,
                                                 GetMotorVehicleQuery,
+                                                ListMotorVehiclesByOwnerQuery,
                                                 ListMotorVehiclesByStatusQuery,
                                                 ListMotorVehiclesQuery,
                                                 MotorVehicleCommandHandler,
                                                 MotorVehicleQueryHandler,
                                                 SearchMotorVehiclesQuery,
+                                                TransferOwnershipCommand,
                                                 UpdateMotorVehicleCommand,
                                                 UpdateMotorVehicleMileageCommand)
 from motor_vehicle_services.domain.exceptions import (MotorVehicleAlreadyExists,
@@ -41,6 +43,8 @@ def _serialize_vehicle(vehicle) -> dict:
         "mileage_km": vehicle.mileage_km,
         "status": vehicle.status,
         "full_name": vehicle.full_name,
+        "owner_id": vehicle.owner_id,
+        "owner_name": vehicle.owner_name,
     }
 
 
@@ -84,6 +88,7 @@ class MotorVehicleListCreateView(APIView):
             mileage_km=request.data.get("mileage_km", 0),
             license_plate=request.data.get("license_plate", ""),
             license_plate_state=request.data.get("license_plate_state", ""),
+            owner_id=request.data.get("owner_id"),
         )
 
         try:
@@ -237,3 +242,46 @@ class MotorVehicleStatusView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(_serialize_vehicle(vehicle))
+
+
+class MotorVehicleOwnerView(APIView):
+    """View for transferring a motor vehicle's ownership."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.command_handler = MotorVehicleCommandHandler()
+
+    def patch(self, request, vehicle_id: int):
+        """Transfer ownership of a motor vehicle."""
+        new_owner_id = request.data.get("owner_id")
+
+        command = TransferOwnershipCommand(
+            vehicle_id=vehicle_id,
+            new_owner_id=new_owner_id,
+        )
+
+        try:
+            vehicle = self.command_handler.handle_transfer_ownership(command)
+        except MotorVehicleNotFound:
+            return Response(
+                {"error": "Motor vehicle not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(_serialize_vehicle(vehicle))
+
+
+class MotorVehiclesByOwnerView(APIView):
+    """View for listing motor vehicles by owner."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.query_handler = MotorVehicleQueryHandler()
+
+    def get(self, request, owner_id: int):
+        """List all vehicles owned by a customer."""
+        query = ListMotorVehiclesByOwnerQuery(owner_id=owner_id)
+        vehicles = self.query_handler.handle_list_by_owner(query)
+        data = [_serialize_vehicle(v) for v in vehicles]
+        return Response(data)

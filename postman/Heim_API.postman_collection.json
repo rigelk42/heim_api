@@ -174,7 +174,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"color\": \"Blue\",\n    \"fuel_type\": \"petrol\",\n    \"transmission\": \"automatic\",\n    \"engine_capacity_cc\": 2000,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\"\n}"
+							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"color\": \"Blue\",\n    \"fuel_type\": \"petrol\",\n    \"transmission\": \"automatic\",\n    \"engine_capacity_cc\": 2000,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\",\n    \"owner_id\": null\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}",
@@ -273,6 +273,63 @@
 							"path": ["{{vehicle_id}}", "status", ""]
 						},
 						"description": "Change a vehicle's status (active, sold, scrapped, stolen)"
+					}
+				},
+				{
+					"name": "Transfer Vehicle Ownership",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/owner/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", "owner", ""]
+						},
+						"description": "Transfer a vehicle's ownership to a customer"
+					}
+				},
+				{
+					"name": "Remove Vehicle Ownership",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner_id\": null\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/{{vehicle_id}}/owner/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["{{vehicle_id}}", "owner", ""]
+						},
+						"description": "Remove a vehicle's owner (unassign)"
+					}
+				},
+				{
+					"name": "List Vehicles by Owner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/owner/{{customer_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["owner", "{{customer_id}}", ""]
+						},
+						"description": "List all vehicles owned by a specific customer"
 					}
 				},
 				{

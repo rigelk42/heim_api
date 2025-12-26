@@ -2,10 +2,12 @@
 
 from django.test import TestCase
 
+from customer_management.domain.models import Customer
 from motor_vehicle_services.application import (ChangeMotorVehicleStatusCommand,
                                                 CreateMotorVehicleCommand,
                                                 DeleteMotorVehicleCommand,
                                                 MotorVehicleCommandHandler,
+                                                TransferOwnershipCommand,
                                                 UpdateMotorVehicleCommand,
                                                 UpdateMotorVehicleMileageCommand)
 from motor_vehicle_services.domain import (MotorVehicle, MotorVehicleAlreadyExists,
@@ -346,3 +348,129 @@ class DeleteMotorVehicleCommandTest(TestCase):
 
         with self.assertRaises(MotorVehicleNotFound):
             self.handler.handle_delete(command)
+
+
+class CreateMotorVehicleWithOwnerTest(TestCase):
+    def setUp(self):
+        self.handler = MotorVehicleCommandHandler()
+        self.customer = Customer.objects.create(
+            given_names="John",
+            surnames="Doe",
+            email="john.doe@example.com",
+        )
+
+    def test_create_vehicle_with_owner(self):
+        command = CreateMotorVehicleCommand(
+            vin="1HGCM82633A004352",
+            make="Honda",
+            model="Accord",
+            year=2020,
+            owner_id=self.customer.id,
+        )
+
+        vehicle = self.handler.handle_create(command)
+
+        self.assertEqual(vehicle.owner_id, self.customer.id)
+        self.assertEqual(vehicle.owner_name, "John Doe")
+
+    def test_create_vehicle_without_owner(self):
+        command = CreateMotorVehicleCommand(
+            vin="1HGCM82633A004352",
+            make="Honda",
+            model="Accord",
+            year=2020,
+        )
+
+        vehicle = self.handler.handle_create(command)
+
+        self.assertIsNone(vehicle.owner_id)
+        self.assertIsNone(vehicle.owner_name)
+
+
+class TransferOwnershipCommandTest(TestCase):
+    def setUp(self):
+        self.handler = MotorVehicleCommandHandler()
+        self.customer1 = Customer.objects.create(
+            given_names="John",
+            surnames="Doe",
+            email="john.doe@example.com",
+        )
+        self.customer2 = Customer.objects.create(
+            given_names="Jane",
+            surnames="Smith",
+            email="jane.smith@example.com",
+        )
+        create_command = CreateMotorVehicleCommand(
+            vin="1HGCM82633A004352",
+            make="Honda",
+            model="Accord",
+            year=2020,
+        )
+        self.vehicle = self.handler.handle_create(create_command)
+
+    def test_transfer_ownership_to_customer(self):
+        command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=self.customer1.id,
+        )
+
+        updated = self.handler.handle_transfer_ownership(command)
+
+        self.assertEqual(updated.owner_id, self.customer1.id)
+        self.assertEqual(updated.owner_name, "John Doe")
+
+    def test_transfer_ownership_to_another_customer(self):
+        # First assign to customer1
+        assign_command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=self.customer1.id,
+        )
+        self.handler.handle_transfer_ownership(assign_command)
+
+        # Then transfer to customer2
+        transfer_command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=self.customer2.id,
+        )
+        updated = self.handler.handle_transfer_ownership(transfer_command)
+
+        self.assertEqual(updated.owner_id, self.customer2.id)
+        self.assertEqual(updated.owner_name, "Jane Smith")
+
+    def test_remove_ownership(self):
+        # First assign to customer
+        assign_command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=self.customer1.id,
+        )
+        self.handler.handle_transfer_ownership(assign_command)
+
+        # Then remove ownership
+        remove_command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=None,
+        )
+        updated = self.handler.handle_transfer_ownership(remove_command)
+
+        self.assertIsNone(updated.owner_id)
+        self.assertIsNone(updated.owner_name)
+
+    def test_transfer_ownership_vehicle_not_found_raises(self):
+        command = TransferOwnershipCommand(
+            vehicle_id=9999,
+            new_owner_id=self.customer1.id,
+        )
+
+        with self.assertRaises(MotorVehicleNotFound):
+            self.handler.handle_transfer_ownership(command)
+
+    def test_transfer_ownership_customer_not_found_raises(self):
+        command = TransferOwnershipCommand(
+            vehicle_id=self.vehicle.id,
+            new_owner_id=9999,
+        )
+
+        with self.assertRaises(ValueError) as context:
+            self.handler.handle_transfer_ownership(command)
+
+        self.assertIn("not found", str(context.exception))

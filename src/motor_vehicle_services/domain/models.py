@@ -43,6 +43,15 @@ class MotorVehicle(models.Model):
         ("stolen", "Stolen"),
     ]
 
+    # Owner relationship
+    owner = models.ForeignKey(
+        "customer_management.Customer",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="vehicles",
+    )
+
     # Identification
     vin = models.CharField(max_length=17, unique=True)
     license_plate = models.CharField(max_length=16, blank=True)
@@ -120,6 +129,13 @@ class MotorVehicle(models.Model):
     def is_active(self) -> bool:
         """Check if the vehicle is currently active."""
         return self.status == "active"
+
+    @property
+    def owner_name(self) -> str | None:
+        """Return the owner's full name if assigned."""
+        if self.owner:
+            return self.owner.full_name
+        return None
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.vin})"
