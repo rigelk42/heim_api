@@ -17,6 +17,7 @@ class Customer(models.Model):
     All access to Address entities must go through Customer methods.
     """
 
+    id: int
     addresses: RelatedManager[Address]
 
     given_names = models.CharField(max_length=32)
@@ -107,6 +108,8 @@ class Address(models.Model):
 
     Should only be created/modified through Customer aggregate root methods.
     """
+
+    id: int
 
     ADDRESS_TYPES = [
         ("home", "Home"),
