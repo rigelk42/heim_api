@@ -1,3 +1,10 @@
+"""Command handlers for the Customer application layer.
+
+Command handlers process commands and execute the corresponding
+business operations. They coordinate between the domain layer
+and infrastructure layer.
+"""
+
 from customers.domain.exceptions import CustomerAlreadyExists, CustomerNotFound
 from customers.domain.models import Address, Customer
 from customers.domain.value_objects import Email, PersonName, PhoneNumber
@@ -9,10 +16,37 @@ from .dtos import (AddCustomerAddressCommand, CreateCustomerCommand,
 
 
 class CustomerCommandHandler:
+    """Handles all customer-related commands.
+
+    This handler processes write operations for the Customer aggregate,
+    including creating, updating, and deleting customers and their addresses.
+
+    Attributes:
+        repository: The repository used for data persistence.
+    """
+
     def __init__(self, repository: CustomerRepository | None = None):
+        """Initialize the command handler.
+
+        Args:
+            repository: Optional repository instance. If not provided,
+                a new CustomerRepository will be created.
+        """
         self.repository = repository or CustomerRepository()
 
     def handle_create(self, command: CreateCustomerCommand) -> Customer:
+        """Create a new customer.
+
+        Args:
+            command: The create customer command.
+
+        Returns:
+            The newly created Customer.
+
+        Raises:
+            CustomerAlreadyExists: If a customer with the email already exists.
+            ValueError: If the name or email is invalid.
+        """
         name = PersonName(given_names=command.given_names, surnames=command.surnames)
         email = Email(value=command.email)
         phone = PhoneNumber(value=command.phone) if command.phone else None
@@ -28,6 +62,18 @@ class CustomerCommandHandler:
         )
 
     def handle_update(self, command: UpdateCustomerCommand) -> Customer:
+        """Update an existing customer's details.
+
+        Args:
+            command: The update customer command.
+
+        Returns:
+            The updated Customer.
+
+        Raises:
+            CustomerNotFound: If the customer does not exist.
+            ValueError: If the new name is invalid.
+        """
         customer = self.repository.get_by_id(command.customer_id)
         if not customer:
             raise CustomerNotFound(command.customer_id)
@@ -46,6 +92,19 @@ class CustomerCommandHandler:
         return self.repository.save(customer)
 
     def handle_update_email(self, command: UpdateCustomerEmailCommand) -> Customer:
+        """Update a customer's email address.
+
+        Args:
+            command: The update email command.
+
+        Returns:
+            The updated Customer.
+
+        Raises:
+            CustomerNotFound: If the customer does not exist.
+            CustomerAlreadyExists: If the new email is already in use.
+            ValueError: If the email format is invalid.
+        """
         customer = self.repository.get_by_id(command.customer_id)
         if not customer:
             raise CustomerNotFound(command.customer_id)
@@ -62,6 +121,14 @@ class CustomerCommandHandler:
         return self.repository.save(customer)
 
     def handle_delete(self, command: DeleteCustomerCommand) -> None:
+        """Delete a customer.
+
+        Args:
+            command: The delete customer command.
+
+        Raises:
+            CustomerNotFound: If the customer does not exist.
+        """
         customer = self.repository.get_by_id(command.customer_id)
         if not customer:
             raise CustomerNotFound(command.customer_id)
@@ -69,6 +136,20 @@ class CustomerCommandHandler:
         self.repository.delete(customer)
 
     def handle_add_address(self, command: AddCustomerAddressCommand) -> Address:
+        """Add an address to a customer.
+
+        If is_primary is True, any existing primary address will be
+        marked as non-primary.
+
+        Args:
+            command: The add address command.
+
+        Returns:
+            The newly created Address.
+
+        Raises:
+            CustomerNotFound: If the customer does not exist.
+        """
         customer = self.repository.get_by_id(command.customer_id)
         if not customer:
             raise CustomerNotFound(command.customer_id)
@@ -85,6 +166,17 @@ class CustomerCommandHandler:
         )
 
     def handle_remove_address(self, command: RemoveCustomerAddressCommand) -> bool:
+        """Remove an address from a customer.
+
+        Args:
+            command: The remove address command.
+
+        Returns:
+            True if the address was removed, False if not found.
+
+        Raises:
+            CustomerNotFound: If the customer does not exist.
+        """
         customer = self.repository.get_by_id(command.customer_id)
         if not customer:
             raise CustomerNotFound(command.customer_id)

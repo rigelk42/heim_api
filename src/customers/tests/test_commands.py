@@ -1,14 +1,9 @@
 from django.test import TestCase
 
-from customers.application import (
-    AddCustomerAddressCommand,
-    CreateCustomerCommand,
-    CustomerCommandHandler,
-    DeleteCustomerCommand,
-    RemoveCustomerAddressCommand,
-    UpdateCustomerCommand,
-    UpdateCustomerEmailCommand,
-)
+from customers.application import (AddCustomerAddressCommand, CreateCustomerCommand,
+                                   CustomerCommandHandler, DeleteCustomerCommand,
+                                   RemoveCustomerAddressCommand, UpdateCustomerCommand,
+                                   UpdateCustomerEmailCommand)
 from customers.domain import Customer, CustomerAlreadyExists, CustomerNotFound
 
 
