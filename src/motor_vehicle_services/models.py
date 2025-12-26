@@ -1,3 +1,9 @@
-from django.db import models
+"""Re-export domain models for Django compatibility.
 
-# Create your models here.
+This module re-exports models from the domain layer to maintain
+Django's expected app structure.
+"""
+
+from motor_vehicle_services.domain.models import MotorVehicle
+
+__all__ = ["MotorVehicle"]

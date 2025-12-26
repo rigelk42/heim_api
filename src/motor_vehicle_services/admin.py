@@ -1,3 +1,9 @@
-from django.contrib import admin
+"""Re-export admin configuration for Django compatibility.
 
-# Register your models here.
+This module re-exports admin configuration from the interfaces layer
+to maintain Django's expected app structure.
+"""
+
+from motor_vehicle_services.interfaces.admin import MotorVehicleAdmin
+
+__all__ = ["MotorVehicleAdmin"]
