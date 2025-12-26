@@ -7,7 +7,7 @@ and be notified when those events occur.
 from collections import defaultdict
 from typing import Callable
 
-from customers.domain.events import DomainEvent
+from customer_management.domain.events import DomainEvent
 
 EventHandler = Callable[[DomainEvent], None]
 

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('customers', '0001_initial'),
+        ('customer_management', '0001_initial'),
     ]
 
     operations = [
@@ -25,10 +25,11 @@ class Migration(migrations.Migration):
                 ('is_primary', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='addresses', to='customers.customer')),
+                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='addresses', to='customer_management.customer')),
             ],
             options={
                 'verbose_name_plural': 'addresses',
+                'db_table': 'customers_address',
             },
         ),
     ]

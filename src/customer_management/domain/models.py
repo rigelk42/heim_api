@@ -28,7 +28,8 @@ class Customer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        app_label = "customers"
+        app_label = "customer_management"
+        db_table = "customers_customer"
         ordering = ["surnames", "given_names"]
 
     # --- Value Object accessors ---
@@ -137,7 +138,8 @@ class Address(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        app_label = "customers"
+        app_label = "customer_management"
+        db_table = "customers_address"
         verbose_name_plural = "addresses"
 
     def __str__(self):

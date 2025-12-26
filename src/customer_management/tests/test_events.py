@@ -1,13 +1,13 @@
 from django.test import TestCase
 
-from customers.application import (AddCustomerAddressCommand, CreateCustomerCommand,
+from customer_management.application import (AddCustomerAddressCommand, CreateCustomerCommand,
                                    CustomerCommandHandler, DeleteCustomerCommand,
                                    RemoveCustomerAddressCommand, UpdateCustomerCommand,
                                    UpdateCustomerEmailCommand)
-from customers.domain import (CustomerAddressAdded, CustomerAddressRemoved,
+from customer_management.domain import (CustomerAddressAdded, CustomerAddressRemoved,
                               CustomerCreated, CustomerDeleted, CustomerEmailChanged,
                               CustomerUpdated)
-from customers.infrastructure import EventDispatcher
+from customer_management.infrastructure import EventDispatcher
 
 
 class EventDispatcherTest(TestCase):

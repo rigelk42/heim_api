@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from customers.domain.models import Customer
+from customer_management.domain.models import Customer
 
 
 @admin.register(Customer)

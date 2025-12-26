@@ -6,7 +6,7 @@ for working with domain entities. They hide the details of data persistence.
 
 from django.db.models import Q, QuerySet
 
-from customers.domain.models import Customer
+from customer_management.domain.models import Customer
 
 
 class CustomerRepository:

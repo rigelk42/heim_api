@@ -1,10 +1,10 @@
 from django.test import TestCase
 
-from customers.application import (AddCustomerAddressCommand, CreateCustomerCommand,
+from customer_management.application import (AddCustomerAddressCommand, CreateCustomerCommand,
                                    CustomerCommandHandler, CustomerQueryHandler,
                                    GetCustomerAddressesQuery, GetCustomerQuery,
                                    ListCustomersQuery, SearchCustomersQuery)
-from customers.domain import CustomerNotFound
+from customer_management.domain import CustomerNotFound
 
 
 class GetCustomerQueryTest(TestCase):

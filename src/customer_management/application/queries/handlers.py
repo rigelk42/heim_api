@@ -6,9 +6,9 @@ They provide read-only access to the domain.
 
 from django.db.models import QuerySet
 
-from customers.domain.exceptions import CustomerNotFound
-from customers.domain.models import Address, Customer
-from customers.infrastructure.repositories import CustomerRepository
+from customer_management.domain.exceptions import CustomerNotFound
+from customer_management.domain.models import Address, Customer
+from customer_management.infrastructure.repositories import CustomerRepository
 
 from .dtos import (GetCustomerAddressesQuery, GetCustomerQuery, ListCustomersQuery,
                    SearchCustomersQuery)

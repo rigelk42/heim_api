@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "customers",
+    "customer_management",
+    "motor_vehicle_services",
 ]
 
 MIDDLEWARE = [

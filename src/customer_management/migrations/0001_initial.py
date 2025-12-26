@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['surnames', 'given_names'],
+                'db_table': 'customers_customer',
             },
         ),
     ]
