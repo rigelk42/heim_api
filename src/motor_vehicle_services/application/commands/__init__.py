@@ -4,11 +4,17 @@ Commands represent intentions to change state in the system.
 This module exports command DTOs and their handlers.
 """
 
-from .dtos import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-                   CreateTransactionCommand, DeleteMotorVehicleCommand,
-                   DeleteTransactionCommand, TransferOwnershipCommand,
-                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand,
-                   UpdateTransactionCommand)
+from .dtos import (
+    ChangeMotorVehicleStatusCommand,
+    CreateMotorVehicleCommand,
+    CreateTransactionCommand,
+    DeleteMotorVehicleCommand,
+    DeleteTransactionCommand,
+    TransferOwnershipCommand,
+    UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand,
+    UpdateTransactionCommand,
+)
 from .handlers import MotorVehicleCommandHandler, TransactionCommandHandler
 
 __all__ = [

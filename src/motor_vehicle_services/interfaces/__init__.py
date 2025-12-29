@@ -6,9 +6,13 @@ The interface layer handles external communication:
 - Django Admin integration
 """
 
-from .views import (MotorVehicleByVINView, MotorVehicleDetailView,
-                    MotorVehicleListCreateView, MotorVehicleMileageView,
-                    MotorVehicleStatusView)
+from .views import (
+    MotorVehicleByVINView,
+    MotorVehicleDetailView,
+    MotorVehicleListCreateView,
+    MotorVehicleMileageView,
+    MotorVehicleStatusView,
+)
 
 __all__ = [
     "MotorVehicleListCreateView",

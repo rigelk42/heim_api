@@ -12,19 +12,35 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from motor_vehicle_services.application import (
-    ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-    CreateTransactionCommand, DeleteMotorVehicleCommand,
-    DeleteTransactionCommand, GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-    GetTransactionQuery, ListMotorVehiclesByOwnerQuery,
-    ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
-    ListTransactionsByCustomerQuery, ListTransactionsByVehicleQuery,
-    ListTransactionsQuery, MotorVehicleCommandHandler,
-    MotorVehicleQueryHandler, SearchMotorVehiclesQuery,
-    TransactionCommandHandler, TransactionQueryHandler,
-    TransferOwnershipCommand, UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand, UpdateTransactionCommand)
+    ChangeMotorVehicleStatusCommand,
+    CreateMotorVehicleCommand,
+    CreateTransactionCommand,
+    DeleteMotorVehicleCommand,
+    DeleteTransactionCommand,
+    GetMotorVehicleByVINQuery,
+    GetMotorVehicleQuery,
+    GetTransactionQuery,
+    ListMotorVehiclesByOwnerQuery,
+    ListMotorVehiclesByStatusQuery,
+    ListMotorVehiclesQuery,
+    ListTransactionsByCustomerQuery,
+    ListTransactionsByVehicleQuery,
+    ListTransactionsQuery,
+    MotorVehicleCommandHandler,
+    MotorVehicleQueryHandler,
+    SearchMotorVehiclesQuery,
+    TransactionCommandHandler,
+    TransactionQueryHandler,
+    TransferOwnershipCommand,
+    UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand,
+    UpdateTransactionCommand,
+)
 from motor_vehicle_services.domain.exceptions import (
-    MotorVehicleAlreadyExists, MotorVehicleNotFound, TransactionNotFound)
+    MotorVehicleAlreadyExists,
+    MotorVehicleNotFound,
+    TransactionNotFound,
+)
 
 
 def _serialize_vehicle(vehicle) -> dict:

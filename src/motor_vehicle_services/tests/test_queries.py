@@ -3,16 +3,18 @@
 from django.test import TestCase
 
 from customer_management.domain.models import Customer
-from motor_vehicle_services.application import (CreateMotorVehicleCommand,
-                                                GetMotorVehicleByVINQuery,
-                                                GetMotorVehicleQuery,
-                                                ListMotorVehiclesByOwnerQuery,
-                                                ListMotorVehiclesByStatusQuery,
-                                                ListMotorVehiclesQuery,
-                                                MotorVehicleCommandHandler,
-                                                MotorVehicleQueryHandler,
-                                                SearchMotorVehiclesQuery,
-                                                TransferOwnershipCommand)
+from motor_vehicle_services.application import (
+    CreateMotorVehicleCommand,
+    GetMotorVehicleByVINQuery,
+    GetMotorVehicleQuery,
+    ListMotorVehiclesByOwnerQuery,
+    ListMotorVehiclesByStatusQuery,
+    ListMotorVehiclesQuery,
+    MotorVehicleCommandHandler,
+    MotorVehicleQueryHandler,
+    SearchMotorVehiclesQuery,
+    TransferOwnershipCommand,
+)
 from motor_vehicle_services.domain import MotorVehicleNotFound
 
 
@@ -184,8 +186,7 @@ class ListMotorVehiclesByStatusQueryTest(TestCase):
 
     def test_list_by_status_sold(self):
         # Mark one as sold
-        from motor_vehicle_services.application import \
-            ChangeMotorVehicleStatusCommand
+        from motor_vehicle_services.application import ChangeMotorVehicleStatusCommand
 
         vehicles = list(self.query_handler.handle_list(ListMotorVehiclesQuery()))
         self.command_handler.handle_change_status(

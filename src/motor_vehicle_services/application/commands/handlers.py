@@ -5,26 +5,38 @@ business operations. They coordinate between the domain layer
 and infrastructure layer.
 """
 
-from motor_vehicle_services.domain.events import (MotorVehicleCreated,
-                                                  MotorVehicleDeleted,
-                                                  MotorVehicleMileageUpdated,
-                                                  MotorVehicleOwnerChanged,
-                                                  MotorVehicleStatusChanged,
-                                                  MotorVehicleUpdated)
+from motor_vehicle_services.domain.events import (
+    MotorVehicleCreated,
+    MotorVehicleDeleted,
+    MotorVehicleMileageUpdated,
+    MotorVehicleOwnerChanged,
+    MotorVehicleStatusChanged,
+    MotorVehicleUpdated,
+)
 from motor_vehicle_services.domain.exceptions import (
-    MotorVehicleAlreadyExists, MotorVehicleNotFound, TransactionNotFound)
+    MotorVehicleAlreadyExists,
+    MotorVehicleNotFound,
+    TransactionNotFound,
+)
 from motor_vehicle_services.domain.models import MotorVehicle, Transaction
 from motor_vehicle_services.domain.value_objects import VIN
-from motor_vehicle_services.infrastructure.event_dispatcher import \
-    EventDispatcher
+from motor_vehicle_services.infrastructure.event_dispatcher import EventDispatcher
 from motor_vehicle_services.infrastructure.repositories import (
-    MotorVehicleRepository, TransactionRepository)
+    MotorVehicleRepository,
+    TransactionRepository,
+)
 
-from .dtos import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-                   CreateTransactionCommand, DeleteMotorVehicleCommand,
-                   DeleteTransactionCommand, TransferOwnershipCommand,
-                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand,
-                   UpdateTransactionCommand)
+from .dtos import (
+    ChangeMotorVehicleStatusCommand,
+    CreateMotorVehicleCommand,
+    CreateTransactionCommand,
+    DeleteMotorVehicleCommand,
+    DeleteTransactionCommand,
+    TransferOwnershipCommand,
+    UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand,
+    UpdateTransactionCommand,
+)
 
 
 class MotorVehicleCommandHandler:

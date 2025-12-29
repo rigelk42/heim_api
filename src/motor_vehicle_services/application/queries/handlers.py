@@ -6,18 +6,28 @@ They provide read-only access to the domain.
 
 from django.db.models import QuerySet
 
-from motor_vehicle_services.domain.exceptions import (MotorVehicleNotFound,
-                                                      TransactionNotFound)
+from motor_vehicle_services.domain.exceptions import (
+    MotorVehicleNotFound,
+    TransactionNotFound,
+)
 from motor_vehicle_services.domain.models import MotorVehicle, Transaction
 from motor_vehicle_services.infrastructure.repositories import (
-    MotorVehicleRepository, TransactionRepository)
+    MotorVehicleRepository,
+    TransactionRepository,
+)
 
-from .dtos import (GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-                   GetTransactionQuery, ListMotorVehiclesByOwnerQuery,
-                   ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
-                   ListTransactionsByCustomerQuery,
-                   ListTransactionsByVehicleQuery, ListTransactionsQuery,
-                   SearchMotorVehiclesQuery)
+from .dtos import (
+    GetMotorVehicleByVINQuery,
+    GetMotorVehicleQuery,
+    GetTransactionQuery,
+    ListMotorVehiclesByOwnerQuery,
+    ListMotorVehiclesByStatusQuery,
+    ListMotorVehiclesQuery,
+    ListTransactionsByCustomerQuery,
+    ListTransactionsByVehicleQuery,
+    ListTransactionsQuery,
+    SearchMotorVehiclesQuery,
+)
 
 
 class MotorVehicleQueryHandler:

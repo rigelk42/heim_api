@@ -7,20 +7,33 @@ Commands represent intentions to change state.
 Queries represent requests for data without side effects.
 """
 
-from .commands import (ChangeMotorVehicleStatusCommand,
-                       CreateMotorVehicleCommand, CreateTransactionCommand,
-                       DeleteMotorVehicleCommand, DeleteTransactionCommand,
-                       MotorVehicleCommandHandler, TransactionCommandHandler,
-                       TransferOwnershipCommand, UpdateMotorVehicleCommand,
-                       UpdateMotorVehicleMileageCommand,
-                       UpdateTransactionCommand)
-from .queries import (GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-                      GetTransactionQuery, ListMotorVehiclesByOwnerQuery,
-                      ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
-                      ListTransactionsByCustomerQuery,
-                      ListTransactionsByVehicleQuery, ListTransactionsQuery,
-                      MotorVehicleQueryHandler, SearchMotorVehiclesQuery,
-                      TransactionQueryHandler)
+from .commands import (
+    ChangeMotorVehicleStatusCommand,
+    CreateMotorVehicleCommand,
+    CreateTransactionCommand,
+    DeleteMotorVehicleCommand,
+    DeleteTransactionCommand,
+    MotorVehicleCommandHandler,
+    TransactionCommandHandler,
+    TransferOwnershipCommand,
+    UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand,
+    UpdateTransactionCommand,
+)
+from .queries import (
+    GetMotorVehicleByVINQuery,
+    GetMotorVehicleQuery,
+    GetTransactionQuery,
+    ListMotorVehiclesByOwnerQuery,
+    ListMotorVehiclesByStatusQuery,
+    ListMotorVehiclesQuery,
+    ListTransactionsByCustomerQuery,
+    ListTransactionsByVehicleQuery,
+    ListTransactionsQuery,
+    MotorVehicleQueryHandler,
+    SearchMotorVehiclesQuery,
+    TransactionQueryHandler,
+)
 
 __all__ = [
     # Motor Vehicle Commands

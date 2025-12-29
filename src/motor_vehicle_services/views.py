@@ -5,8 +5,12 @@ Django's expected app structure.
 """
 
 from motor_vehicle_services.interfaces.views import (
-    MotorVehicleByVINView, MotorVehicleDetailView, MotorVehicleListCreateView,
-    MotorVehicleMileageView, MotorVehicleStatusView)
+    MotorVehicleByVINView,
+    MotorVehicleDetailView,
+    MotorVehicleListCreateView,
+    MotorVehicleMileageView,
+    MotorVehicleStatusView,
+)
 
 __all__ = [
     "MotorVehicleListCreateView",

@@ -8,11 +8,21 @@ It includes:
 - Domain Exceptions
 """
 
-from .events import (DomainEvent, MotorVehicleCreated, MotorVehicleDeleted,
-                     MotorVehicleMileageUpdated, MotorVehicleOwnerChanged,
-                     MotorVehicleStatusChanged, MotorVehicleUpdated)
-from .exceptions import (InvalidMileageUpdate, MotorVehicleAlreadyExists,
-                         MotorVehicleNotFound, MotorVehicleServiceException)
+from .events import (
+    DomainEvent,
+    MotorVehicleCreated,
+    MotorVehicleDeleted,
+    MotorVehicleMileageUpdated,
+    MotorVehicleOwnerChanged,
+    MotorVehicleStatusChanged,
+    MotorVehicleUpdated,
+)
+from .exceptions import (
+    InvalidMileageUpdate,
+    MotorVehicleAlreadyExists,
+    MotorVehicleNotFound,
+    MotorVehicleServiceException,
+)
 from .models import MotorVehicle
 from .value_objects import VIN, LicensePlate, Mileage
 

@@ -1,5 +1,9 @@
-from .dtos import (GetCustomerAddressesQuery, GetCustomerQuery,
-                   ListCustomersQuery, SearchCustomersQuery)
+from .dtos import (
+    GetCustomerAddressesQuery,
+    GetCustomerQuery,
+    ListCustomersQuery,
+    SearchCustomersQuery,
+)
 from .handlers import CustomerQueryHandler
 
 __all__ = [

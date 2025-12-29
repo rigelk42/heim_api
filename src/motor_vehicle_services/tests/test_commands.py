@@ -4,13 +4,19 @@ from django.test import TestCase
 
 from customer_management.domain.models import Customer
 from motor_vehicle_services.application import (
-    ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-    DeleteMotorVehicleCommand, MotorVehicleCommandHandler,
-    TransferOwnershipCommand, UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand)
-from motor_vehicle_services.domain import (MotorVehicle,
-                                           MotorVehicleAlreadyExists,
-                                           MotorVehicleNotFound)
+    ChangeMotorVehicleStatusCommand,
+    CreateMotorVehicleCommand,
+    DeleteMotorVehicleCommand,
+    MotorVehicleCommandHandler,
+    TransferOwnershipCommand,
+    UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand,
+)
+from motor_vehicle_services.domain import (
+    MotorVehicle,
+    MotorVehicleAlreadyExists,
+    MotorVehicleNotFound,
+)
 
 
 class CreateMotorVehicleCommandTest(TestCase):

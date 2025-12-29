@@ -5,23 +5,31 @@ business operations. They coordinate between the domain layer
 and infrastructure layer.
 """
 
-from customer_management.domain.events import (CustomerAddressAdded,
-                                               CustomerAddressRemoved,
-                                               CustomerCreated,
-                                               CustomerDeleted,
-                                               CustomerEmailChanged,
-                                               CustomerUpdated)
-from customer_management.domain.exceptions import (CustomerAlreadyExists,
-                                                   CustomerNotFound)
+from customer_management.domain.events import (
+    CustomerAddressAdded,
+    CustomerAddressRemoved,
+    CustomerCreated,
+    CustomerDeleted,
+    CustomerEmailChanged,
+    CustomerUpdated,
+)
+from customer_management.domain.exceptions import (
+    CustomerAlreadyExists,
+    CustomerNotFound,
+)
 from customer_management.domain.models import Address, Customer
-from customer_management.domain.value_objects import (Email, PersonName,
-                                                      PhoneNumber)
+from customer_management.domain.value_objects import Email, PersonName, PhoneNumber
 from customer_management.infrastructure.event_dispatcher import EventDispatcher
 from customer_management.infrastructure.repositories import CustomerRepository
 
-from .dtos import (AddCustomerAddressCommand, CreateCustomerCommand,
-                   DeleteCustomerCommand, RemoveCustomerAddressCommand,
-                   UpdateCustomerCommand, UpdateCustomerEmailCommand)
+from .dtos import (
+    AddCustomerAddressCommand,
+    CreateCustomerCommand,
+    DeleteCustomerCommand,
+    RemoveCustomerAddressCommand,
+    UpdateCustomerCommand,
+    UpdateCustomerEmailCommand,
+)
 
 
 class CustomerCommandHandler:
