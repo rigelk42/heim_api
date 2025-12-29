@@ -9,20 +9,19 @@ app_name = "motor_vehicle_services"
 urlpatterns = [
     # Motor Vehicle endpoints
     path("", views.MotorVehicleListCreateView.as_view(), name="list-create"),
-    path("<int:vehicle_id>/", views.MotorVehicleDetailView.as_view(), name="detail"),
+    path("<str:vin>/", views.MotorVehicleDetailView.as_view(), name="detail"),
     path(
-        "<int:vehicle_id>/mileage/",
+        "<str:vin>/mileage/",
         views.MotorVehicleMileageView.as_view(),
         name="mileage",
     ),
     path(
-        "<int:vehicle_id>/owner/",
+        "<str:vin>/owner/",
         views.MotorVehicleOwnerView.as_view(),
         name="owner",
     ),
-    path("vin/<str:vin>/", views.MotorVehicleByVINView.as_view(), name="by-vin"),
     path(
-        "owner/<int:owner_id>/",
+        "owner/<str:owner_id>/",
         views.MotorVehiclesByOwnerView.as_view(),
         name="by-owner",
     ),
@@ -38,12 +37,12 @@ urlpatterns = [
         name="transaction-detail",
     ),
     path(
-        "transactions/customer/<int:customer_id>/",
+        "transactions/customer/<str:customer_id>/",
         views.TransactionsByCustomerView.as_view(),
         name="transactions-by-customer",
     ),
     path(
-        "transactions/vehicle/<int:vehicle_id>/",
+        "transactions/vehicle/<str:vin>/",
         views.TransactionsByVehicleView.as_view(),
         name="transactions-by-vehicle",
     ),

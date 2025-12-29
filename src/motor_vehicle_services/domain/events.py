@@ -34,14 +34,12 @@ class MotorVehicleCreated(DomainEvent):
     """Event raised when a new motor vehicle is registered.
 
     Attributes:
-        vehicle_id: The ID of the created vehicle.
         vin: The vehicle identification number.
         make: The vehicle manufacturer.
         model: The vehicle model.
         year: The model year.
     """
 
-    vehicle_id: int = 0
     vin: str = ""
     make: str = ""
     model: str = ""
@@ -53,11 +51,11 @@ class MotorVehicleUpdated(DomainEvent):
     """Event raised when a motor vehicle's details are updated.
 
     Attributes:
-        vehicle_id: The ID of the updated vehicle.
+        vin: The VIN of the updated vehicle.
         changes: Tuple of field names to new values.
     """
 
-    vehicle_id: int = 0
+    vin: str = ""
     changes: tuple[tuple[str, Any], ...] = ()
 
 
@@ -66,12 +64,12 @@ class MotorVehicleMileageUpdated(DomainEvent):
     """Event raised when a vehicle's mileage is updated.
 
     Attributes:
-        vehicle_id: The ID of the vehicle.
+        vin: The VIN of the vehicle.
         old_mileage_km: The previous mileage in kilometers.
         new_mileage_km: The new mileage in kilometers.
     """
 
-    vehicle_id: int = 0
+    vin: str = ""
     old_mileage_km: int = 0
     new_mileage_km: int = 0
 
@@ -81,14 +79,14 @@ class MotorVehicleOwnerChanged(DomainEvent):
     """Event raised when a vehicle's owner changes.
 
     Attributes:
-        vehicle_id: The ID of the vehicle.
+        vin: The VIN of the vehicle.
         old_owner_id: The ID of the previous owner (None if unassigned).
         new_owner_id: The ID of the new owner (None if unassigned).
     """
 
-    vehicle_id: int = 0
-    old_owner_id: int | None = None
-    new_owner_id: int | None = None
+    vin: str = ""
+    old_owner_id: str | None = None
+    new_owner_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -96,9 +94,7 @@ class MotorVehicleDeleted(DomainEvent):
     """Event raised when a motor vehicle is deleted.
 
     Attributes:
-        vehicle_id: The ID of the deleted vehicle.
-        vin: The vehicle identification number (for reference).
+        vin: The vehicle identification number.
     """
 
-    vehicle_id: int = 0
     vin: str = ""

@@ -5,7 +5,6 @@ from django.test import TestCase
 from customer_management.domain.models import Customer
 from motor_vehicle_services.application import (
     CreateMotorVehicleCommand,
-    GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     ListMotorVehiclesByOwnerQuery,
     ListMotorVehiclesQuery,
@@ -31,56 +30,27 @@ class GetMotorVehicleQueryTest(TestCase):
         self.vehicle = self.command_handler.handle_create(create_command)
 
     def test_get_vehicle_success(self):
-        query = GetMotorVehicleQuery(vehicle_id=self.vehicle.id)
+        query = GetMotorVehicleQuery(vin=self.vehicle.vin)
 
         result = self.query_handler.handle_get(query)
 
-        self.assertEqual(result.id, self.vehicle.id)
         self.assertEqual(result.vin, "1HGCM82633A004352")
         self.assertEqual(result.make, "Honda")
         self.assertEqual(result.model, "Accord")
         self.assertEqual(result.year, 2020)
 
     def test_get_vehicle_not_found_raises(self):
-        query = GetMotorVehicleQuery(vehicle_id=9999)
+        query = GetMotorVehicleQuery(vin="XXXXXXXXXXXXXXXXX")
 
         with self.assertRaises(MotorVehicleNotFound):
             self.query_handler.handle_get(query)
 
-
-class GetMotorVehicleByVINQueryTest(TestCase):
-    def setUp(self):
-        self.command_handler = MotorVehicleCommandHandler()
-        self.query_handler = MotorVehicleQueryHandler()
-
-        create_command = CreateMotorVehicleCommand(
-            vin="1HGCM82633A004352",
-            make="Honda",
-            model="Accord",
-            year=2020,
-        )
-        self.vehicle = self.command_handler.handle_create(create_command)
-
-    def test_get_vehicle_by_vin_success(self):
-        query = GetMotorVehicleByVINQuery(vin="1HGCM82633A004352")
-
-        result = self.query_handler.handle_get_by_vin(query)
-
-        self.assertEqual(result.id, self.vehicle.id)
-        self.assertEqual(result.vin, "1HGCM82633A004352")
-
     def test_get_vehicle_by_vin_case_insensitive(self):
-        query = GetMotorVehicleByVINQuery(vin="1hgcm82633a004352")  # lowercase
+        query = GetMotorVehicleQuery(vin="1hgcm82633a004352")  # lowercase
 
-        result = self.query_handler.handle_get_by_vin(query)
+        result = self.query_handler.handle_get(query)
 
-        self.assertEqual(result.id, self.vehicle.id)
-
-    def test_get_vehicle_by_vin_not_found_raises(self):
-        query = GetMotorVehicleByVINQuery(vin="XXXXXXXXXXXXXXXXX")
-
-        with self.assertRaises(MotorVehicleNotFound):
-            self.query_handler.handle_get_by_vin(query)
+        self.assertEqual(result.vin, self.vehicle.vin)
 
 
 class ListMotorVehiclesQueryTest(TestCase):
@@ -246,11 +216,13 @@ class ListMotorVehiclesByOwnerQueryTest(TestCase):
 
         # Create customers
         self.customer1 = Customer.objects.create(
+            customer_id="C25001A1200004",
             given_names="John",
             surnames="Doe",
             email="john.doe@example.com",
         )
         self.customer2 = Customer.objects.create(
+            customer_id="C25001A1200005",
             given_names="Jane",
             surnames="Smith",
             email="jane.smith@example.com",
@@ -285,25 +257,25 @@ class ListMotorVehiclesByOwnerQueryTest(TestCase):
         # Assign vehicles to owners
         self.command_handler.handle_transfer_ownership(
             TransferOwnershipCommand(
-                vehicle_id=self.vehicle1.id,
-                new_owner_id=self.customer1.id,
+                vin=self.vehicle1.vin,
+                new_owner_id=self.customer1.customer_id,
             )
         )
         self.command_handler.handle_transfer_ownership(
             TransferOwnershipCommand(
-                vehicle_id=self.vehicle2.id,
-                new_owner_id=self.customer1.id,
+                vin=self.vehicle2.vin,
+                new_owner_id=self.customer1.customer_id,
             )
         )
         self.command_handler.handle_transfer_ownership(
             TransferOwnershipCommand(
-                vehicle_id=self.vehicle3.id,
-                new_owner_id=self.customer2.id,
+                vin=self.vehicle3.vin,
+                new_owner_id=self.customer2.customer_id,
             )
         )
 
     def test_list_by_owner_returns_owned_vehicles(self):
-        query = ListMotorVehiclesByOwnerQuery(owner_id=self.customer1.id)
+        query = ListMotorVehiclesByOwnerQuery(owner_id=self.customer1.customer_id)
 
         result = self.query_handler.handle_list_by_owner(query)
 
@@ -313,7 +285,7 @@ class ListMotorVehiclesByOwnerQueryTest(TestCase):
         self.assertIn("2T1BURHE5JC123456", vins)
 
     def test_list_by_owner_returns_single_vehicle(self):
-        query = ListMotorVehiclesByOwnerQuery(owner_id=self.customer2.id)
+        query = ListMotorVehiclesByOwnerQuery(owner_id=self.customer2.customer_id)
 
         result = self.query_handler.handle_list_by_owner(query)
 
@@ -323,19 +295,20 @@ class ListMotorVehiclesByOwnerQueryTest(TestCase):
     def test_list_by_owner_no_vehicles(self):
         # Create a customer with no vehicles
         customer3 = Customer.objects.create(
+            customer_id="C25001A1200006",
             given_names="Bob",
             surnames="Wilson",
             email="bob.wilson@example.com",
         )
 
-        query = ListMotorVehiclesByOwnerQuery(owner_id=customer3.id)
+        query = ListMotorVehiclesByOwnerQuery(owner_id=customer3.customer_id)
 
         result = self.query_handler.handle_list_by_owner(query)
 
         self.assertEqual(result.count(), 0)
 
     def test_list_by_owner_nonexistent_customer(self):
-        query = ListMotorVehiclesByOwnerQuery(owner_id=9999)
+        query = ListMotorVehiclesByOwnerQuery(owner_id="NONEXISTENT12345")
 
         result = self.query_handler.handle_list_by_owner(query)
 

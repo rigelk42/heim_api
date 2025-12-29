@@ -5,7 +5,6 @@ This module exports query DTOs and their handlers.
 """
 
 from .dtos import (
-    GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
@@ -19,7 +18,6 @@ from .handlers import MotorVehicleQueryHandler, TransactionQueryHandler
 
 __all__ = [
     "GetMotorVehicleQuery",
-    "GetMotorVehicleByVINQuery",
     "ListMotorVehiclesQuery",
     "ListMotorVehiclesByOwnerQuery",
     "SearchMotorVehiclesQuery",

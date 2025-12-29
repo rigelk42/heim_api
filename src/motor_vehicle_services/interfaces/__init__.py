@@ -7,7 +7,6 @@ The interface layer handles external communication:
 """
 
 from .views import (
-    MotorVehicleByVINView,
     MotorVehicleDetailView,
     MotorVehicleListCreateView,
     MotorVehicleMileageView,
@@ -16,6 +15,5 @@ from .views import (
 __all__ = [
     "MotorVehicleListCreateView",
     "MotorVehicleDetailView",
-    "MotorVehicleByVINView",
     "MotorVehicleMileageView",
 ]

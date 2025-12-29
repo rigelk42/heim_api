@@ -16,7 +16,6 @@ from motor_vehicle_services.application import (
     CreateTransactionCommand,
     DeleteMotorVehicleCommand,
     DeleteTransactionCommand,
-    GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
@@ -51,7 +50,6 @@ def _serialize_vehicle(vehicle) -> dict:
         A dictionary containing the vehicle's data.
     """
     return {
-        "id": vehicle.id,
         "vin": vehicle.vin,
         "license_plate": vehicle.license_plate,
         "license_plate_state": vehicle.license_plate_state,
@@ -118,9 +116,9 @@ class MotorVehicleDetailView(APIView):
         self.command_handler = MotorVehicleCommandHandler()
         self.query_handler = MotorVehicleQueryHandler()
 
-    def get(self, request, vehicle_id: int):
-        """Retrieve a motor vehicle by ID."""
-        query = GetMotorVehicleQuery(vehicle_id=vehicle_id)
+    def get(self, request, vin: str):
+        """Retrieve a motor vehicle by VIN."""
+        query = GetMotorVehicleQuery(vin=vin)
 
         try:
             vehicle = self.query_handler.handle_get(query)
@@ -131,10 +129,10 @@ class MotorVehicleDetailView(APIView):
 
         return Response(_serialize_vehicle(vehicle))
 
-    def patch(self, request, vehicle_id: int):
+    def patch(self, request, vin: str):
         """Update a motor vehicle's details."""
         command = UpdateMotorVehicleCommand(
-            vehicle_id=vehicle_id,
+            vin=vin,
             license_plate=request.data.get("license_plate"),
             license_plate_state=request.data.get("license_plate_state"),
         )
@@ -150,9 +148,9 @@ class MotorVehicleDetailView(APIView):
 
         return Response(_serialize_vehicle(vehicle))
 
-    def delete(self, request, vehicle_id: int):
+    def delete(self, request, vin: str):
         """Delete a motor vehicle."""
-        command = DeleteMotorVehicleCommand(vehicle_id=vehicle_id)
+        command = DeleteMotorVehicleCommand(vin=vin)
 
         try:
             self.command_handler.handle_delete(command)
@@ -164,27 +162,6 @@ class MotorVehicleDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class MotorVehicleByVINView(APIView):
-    """View for retrieving a motor vehicle by VIN."""
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.query_handler = MotorVehicleQueryHandler()
-
-    def get(self, request, vin: str):
-        """Retrieve a motor vehicle by VIN."""
-        query = GetMotorVehicleByVINQuery(vin=vin)
-
-        try:
-            vehicle = self.query_handler.handle_get_by_vin(query)
-        except MotorVehicleNotFound:
-            return Response(
-                {"error": "Motor vehicle not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-
-        return Response(_serialize_vehicle(vehicle))
-
-
 class MotorVehicleMileageView(APIView):
     """View for updating a motor vehicle's mileage."""
 
@@ -192,7 +169,7 @@ class MotorVehicleMileageView(APIView):
         super().__init__(**kwargs)
         self.command_handler = MotorVehicleCommandHandler()
 
-    def patch(self, request, vehicle_id: int):
+    def patch(self, request, vin: str):
         """Update the mileage of a motor vehicle."""
         mileage_km = request.data.get("mileage_km")
         if mileage_km is None:
@@ -201,7 +178,7 @@ class MotorVehicleMileageView(APIView):
             )
 
         command = UpdateMotorVehicleMileageCommand(
-            vehicle_id=vehicle_id,
+            vin=vin,
             mileage_km=mileage_km,
         )
 
@@ -224,12 +201,12 @@ class MotorVehicleOwnerView(APIView):
         super().__init__(**kwargs)
         self.command_handler = MotorVehicleCommandHandler()
 
-    def patch(self, request, vehicle_id: int):
+    def patch(self, request, vin: str):
         """Transfer ownership of a motor vehicle."""
         new_owner_id = request.data.get("owner_id")
 
         command = TransferOwnershipCommand(
-            vehicle_id=vehicle_id,
+            vin=vin,
             new_owner_id=new_owner_id,
         )
 
@@ -252,7 +229,7 @@ class MotorVehiclesByOwnerView(APIView):
         super().__init__(**kwargs)
         self.query_handler = MotorVehicleQueryHandler()
 
-    def get(self, request, owner_id: int):
+    def get(self, request, owner_id: str):
         """List all vehicles owned by a customer."""
         query = ListMotorVehiclesByOwnerQuery(owner_id=owner_id)
         vehicles = self.query_handler.handle_list_by_owner(query)
@@ -275,7 +252,7 @@ def _serialize_transaction(transaction) -> dict:
         "customer_name": (
             transaction.customer.full_name if transaction.customer else None
         ),
-        "vehicle_id": transaction.vehicle_id,
+        "vin": transaction.vehicle_id,
         "vehicle_name": transaction.vehicle.full_name if transaction.vehicle else None,
         "transaction_type": transaction.transaction_type,
         "transaction_date": transaction.transaction_date.isoformat(),
@@ -321,8 +298,8 @@ class TransactionListCreateView(APIView):
             )
 
         command = CreateTransactionCommand(
-            customer_id=request.data.get("customer_id", 0),
-            vehicle_id=request.data.get("vehicle_id", 0),
+            customer_id=request.data.get("customer_id", ""),
+            vin=request.data.get("vin", ""),
             transaction_type=request.data.get("transaction_type", "renew"),
             transaction_date=transaction_date,
             transaction_amount=transaction_amount,
@@ -424,7 +401,7 @@ class TransactionsByCustomerView(APIView):
         super().__init__(**kwargs)
         self.query_handler = TransactionQueryHandler()
 
-    def get(self, request, customer_id: int):
+    def get(self, request, customer_id: str):
         """List all transactions for a customer."""
         query = ListTransactionsByCustomerQuery(customer_id=customer_id)
         transactions = self.query_handler.handle_list_by_customer(query)
@@ -439,9 +416,9 @@ class TransactionsByVehicleView(APIView):
         super().__init__(**kwargs)
         self.query_handler = TransactionQueryHandler()
 
-    def get(self, request, vehicle_id: int):
+    def get(self, request, vin: str):
         """List all transactions for a vehicle."""
-        query = ListTransactionsByVehicleQuery(vehicle_id=vehicle_id)
+        query = ListTransactionsByVehicleQuery(vin=vin)
         transactions = self.query_handler.handle_list_by_vehicle(query)
         data = [_serialize_transaction(t) for t in transactions]
         return Response(data)

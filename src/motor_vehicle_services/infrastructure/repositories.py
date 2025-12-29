@@ -27,17 +27,6 @@ class MotorVehicleRepository:
         """
         return MotorVehicle.objects.all()
 
-    def get_by_id(self, vehicle_id: int) -> MotorVehicle | None:
-        """Retrieve a motor vehicle by ID.
-
-        Args:
-            vehicle_id: The ID of the vehicle to retrieve.
-
-        Returns:
-            The MotorVehicle if found, None otherwise.
-        """
-        return MotorVehicle.objects.filter(id=vehicle_id).first()
-
     def get_by_vin(self, vin: str) -> MotorVehicle | None:
         """Retrieve a motor vehicle by VIN.
 
@@ -60,11 +49,11 @@ class MotorVehicleRepository:
         """
         return MotorVehicle.objects.filter(license_plate=license_plate.upper()).first()
 
-    def get_by_owner(self, owner_id: int) -> QuerySet[MotorVehicle]:
+    def get_by_owner(self, owner_id: str) -> QuerySet[MotorVehicle]:
         """Retrieve all motor vehicles owned by a specific customer.
 
         Args:
-            owner_id: The ID of the customer.
+            owner_id: The customer_id of the owner.
 
         Returns:
             A QuerySet of vehicles owned by this customer.
@@ -116,7 +105,7 @@ class MotorVehicleRepository:
         mileage_km: int = 0,
         license_plate: str = "",
         license_plate_state: str = "",
-        owner_id: int | None = None,
+        owner_id: str | None = None,
     ) -> MotorVehicle:
         """Create a new motor vehicle.
 
@@ -185,27 +174,27 @@ class TransactionRepository:
         """
         return Transaction.objects.filter(id=transaction_id).first()
 
-    def get_by_customer(self, customer_id: int) -> QuerySet[Transaction]:
+    def get_by_customer(self, customer_id: str) -> QuerySet[Transaction]:
         """Retrieve all transactions for a specific customer.
 
         Args:
-            customer_id: The ID of the customer.
+            customer_id: The customer_id of the customer.
 
         Returns:
             A QuerySet of transactions for this customer.
         """
         return Transaction.objects.filter(customer_id=customer_id)
 
-    def get_by_vehicle(self, vehicle_id: int) -> QuerySet[Transaction]:
+    def get_by_vehicle(self, vin: str) -> QuerySet[Transaction]:
         """Retrieve all transactions for a specific vehicle.
 
         Args:
-            vehicle_id: The ID of the vehicle.
+            vin: The VIN of the vehicle.
 
         Returns:
             A QuerySet of transactions for this vehicle.
         """
-        return Transaction.objects.filter(vehicle_id=vehicle_id)
+        return Transaction.objects.filter(vehicle_id=vin)
 
     def save(self, transaction: Transaction) -> Transaction:
         """Save an existing transaction.
@@ -225,8 +214,8 @@ class TransactionRepository:
 
     def create(
         self,
-        customer_id: int,
-        vehicle_id: int,
+        customer_id: str,
+        vin: str,
         transaction_type: str,
         transaction_date: date,
         transaction_amount: Decimal,
@@ -234,8 +223,8 @@ class TransactionRepository:
         """Create a new transaction.
 
         Args:
-            customer_id: The ID of the customer.
-            vehicle_id: The ID of the vehicle.
+            customer_id: The customer_id of the customer.
+            vin: The VIN of the vehicle.
             transaction_type: The type of transaction.
             transaction_date: The date of the transaction.
             transaction_amount: The transaction amount.
@@ -248,7 +237,7 @@ class TransactionRepository:
         """
         transaction = Transaction(
             customer_id=customer_id,
-            vehicle_id=vehicle_id,
+            vehicle_id=vin,
             transaction_type=transaction_type,
             transaction_date=transaction_date,
             transaction_amount=transaction_amount,

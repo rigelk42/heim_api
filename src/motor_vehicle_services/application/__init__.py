@@ -20,7 +20,6 @@ from .commands import (
     UpdateTransactionCommand,
 )
 from .queries import (
-    GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
@@ -43,7 +42,6 @@ __all__ = [
     "MotorVehicleCommandHandler",
     # Motor Vehicle Queries
     "GetMotorVehicleQuery",
-    "GetMotorVehicleByVINQuery",
     "ListMotorVehiclesQuery",
     "ListMotorVehiclesByOwnerQuery",
     "SearchMotorVehiclesQuery",

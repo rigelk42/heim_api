@@ -17,7 +17,6 @@ from motor_vehicle_services.infrastructure.repositories import (
 )
 
 from .dtos import (
-    GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
@@ -49,27 +48,10 @@ class MotorVehicleQueryHandler:
         self.repository = repository or MotorVehicleRepository()
 
     def handle_get(self, query: GetMotorVehicleQuery) -> MotorVehicle:
-        """Retrieve a single motor vehicle by ID.
+        """Retrieve a single motor vehicle by VIN.
 
         Args:
             query: The get motor vehicle query.
-
-        Returns:
-            The requested MotorVehicle.
-
-        Raises:
-            MotorVehicleNotFound: If the vehicle does not exist.
-        """
-        vehicle = self.repository.get_by_id(query.vehicle_id)
-        if not vehicle:
-            raise MotorVehicleNotFound(query.vehicle_id)
-        return vehicle
-
-    def handle_get_by_vin(self, query: GetMotorVehicleByVINQuery) -> MotorVehicle:
-        """Retrieve a motor vehicle by VIN.
-
-        Args:
-            query: The get by VIN query.
 
         Returns:
             The requested MotorVehicle.
@@ -189,4 +171,4 @@ class TransactionQueryHandler:
         Returns:
             A QuerySet of transactions for the specified vehicle.
         """
-        return self.repository.get_by_vehicle(query.vehicle_id)
+        return self.repository.get_by_vehicle(query.vin)

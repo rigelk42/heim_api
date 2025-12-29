@@ -24,6 +24,21 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                (
+                    "transaction_type",
+                    models.CharField(
+                        choices=[
+                            ("renew", "Renew"),
+                            ("transfer", "Transfer"),
+                            ("renew_rdf", "Renew RDF"),
+                            ("transfer_rdf", "Transfer RDF"),
+                            ("duplicate_title", "Duplicate Title"),
+                            ("replacement_credentials", "Replacement Credentials"),
+                        ],
+                        default="renew",
+                        max_length=32,
+                    ),
+                ),
                 ("transaction_date", models.DateField()),
                 (
                     "transaction_amount",

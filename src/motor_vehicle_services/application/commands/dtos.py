@@ -32,7 +32,7 @@ class CreateMotorVehicleCommand:
     mileage_km: int = 0
     license_plate: str = ""
     license_plate_state: str = ""
-    owner_id: int | None = None
+    owner_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -42,12 +42,12 @@ class UpdateMotorVehicleCommand:
     Only non-None fields will be updated.
 
     Attributes:
-        vehicle_id: The ID of the vehicle to update.
+        vin: The VIN of the vehicle to update.
         license_plate: New license plate (optional).
         license_plate_state: New license plate state (optional).
     """
 
-    vehicle_id: int
+    vin: str
     license_plate: str | None = None
     license_plate_state: str | None = None
 
@@ -57,11 +57,11 @@ class UpdateMotorVehicleMileageCommand:
     """Command to update a vehicle's mileage.
 
     Attributes:
-        vehicle_id: The ID of the vehicle to update.
+        vin: The VIN of the vehicle to update.
         mileage_km: The new mileage in kilometers.
     """
 
-    vehicle_id: int
+    vin: str
     mileage_km: int
 
 
@@ -70,10 +70,10 @@ class DeleteMotorVehicleCommand:
     """Command to delete a motor vehicle.
 
     Attributes:
-        vehicle_id: The ID of the vehicle to delete.
+        vin: The VIN of the vehicle to delete.
     """
 
-    vehicle_id: int
+    vin: str
 
 
 @dataclass(frozen=True)
@@ -81,12 +81,12 @@ class TransferOwnershipCommand:
     """Command to transfer a vehicle's ownership to a new owner.
 
     Attributes:
-        vehicle_id: The ID of the vehicle.
+        vin: The VIN of the vehicle.
         new_owner_id: The ID of the new owner (None to unassign).
     """
 
-    vehicle_id: int
-    new_owner_id: int | None = None
+    vin: str
+    new_owner_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -95,14 +95,14 @@ class CreateTransactionCommand:
 
     Attributes:
         customer_id: The ID of the customer.
-        vehicle_id: The ID of the vehicle.
+        vin: The VIN of the vehicle.
         transaction_type: Type of transaction (renew, transfer, etc.).
         transaction_date: The date of the transaction.
         transaction_amount: The transaction amount.
     """
 
-    customer_id: int
-    vehicle_id: int
+    customer_id: str
+    vin: str
     transaction_type: str
     transaction_date: date
     transaction_amount: Decimal

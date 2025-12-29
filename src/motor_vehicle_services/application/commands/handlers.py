@@ -98,7 +98,6 @@ class MotorVehicleCommandHandler:
 
         self.event_dispatcher.publish(
             MotorVehicleCreated(
-                vehicle_id=vehicle.id,
                 vin=vehicle.vin,
                 make=vehicle.make,
                 model=vehicle.model,
@@ -122,9 +121,9 @@ class MotorVehicleCommandHandler:
         Raises:
             MotorVehicleNotFound: If the vehicle does not exist.
         """
-        vehicle = self.repository.get_by_id(command.vehicle_id)
+        vehicle = self.repository.get_by_vin(command.vin)
         if not vehicle:
-            raise MotorVehicleNotFound(command.vehicle_id)
+            raise MotorVehicleNotFound(command.vin)
 
         changes: list[tuple[str, str | int | None]] = []
 
@@ -141,7 +140,7 @@ class MotorVehicleCommandHandler:
         if changes:
             self.event_dispatcher.publish(
                 MotorVehicleUpdated(
-                    vehicle_id=vehicle.id,
+                    vin=vehicle.vin,
                     changes=tuple(changes),
                 )
             )
@@ -165,9 +164,9 @@ class MotorVehicleCommandHandler:
             MotorVehicleNotFound: If the vehicle does not exist.
             ValueError: If the new mileage is less than current.
         """
-        vehicle = self.repository.get_by_id(command.vehicle_id)
+        vehicle = self.repository.get_by_vin(command.vin)
         if not vehicle:
-            raise MotorVehicleNotFound(command.vehicle_id)
+            raise MotorVehicleNotFound(command.vin)
 
         old_mileage = vehicle.mileage_km
 
@@ -182,7 +181,7 @@ class MotorVehicleCommandHandler:
 
         self.event_dispatcher.publish(
             MotorVehicleMileageUpdated(
-                vehicle_id=vehicle.id,
+                vin=vehicle.vin,
                 old_mileage_km=old_mileage,
                 new_mileage_km=vehicle.mileage_km,
             )
@@ -201,18 +200,16 @@ class MotorVehicleCommandHandler:
         Raises:
             MotorVehicleNotFound: If the vehicle does not exist.
         """
-        vehicle = self.repository.get_by_id(command.vehicle_id)
+        vehicle = self.repository.get_by_vin(command.vin)
         if not vehicle:
-            raise MotorVehicleNotFound(command.vehicle_id)
+            raise MotorVehicleNotFound(command.vin)
 
-        vehicle_id = vehicle.id
         vin = vehicle.vin
 
         self.repository.delete(vehicle)
 
         self.event_dispatcher.publish(
             MotorVehicleDeleted(
-                vehicle_id=vehicle_id,
                 vin=vin,
             )
         )
@@ -233,16 +230,16 @@ class MotorVehicleCommandHandler:
         Raises:
             MotorVehicleNotFound: If the vehicle does not exist.
         """
-        vehicle = self.repository.get_by_id(command.vehicle_id)
+        vehicle = self.repository.get_by_vin(command.vin)
         if not vehicle:
-            raise MotorVehicleNotFound(command.vehicle_id)
+            raise MotorVehicleNotFound(command.vin)
 
         old_owner_id = vehicle.owner_id if vehicle.owner else None
 
         if command.new_owner_id is not None:
             from customer_management.domain.models import Customer
 
-            owner = Customer.objects.filter(id=command.new_owner_id).first()
+            owner = Customer.objects.filter(customer_id=command.new_owner_id).first()
             if not owner:
                 raise ValueError(f"Customer with ID {command.new_owner_id} not found")
             vehicle.owner = owner
@@ -256,7 +253,7 @@ class MotorVehicleCommandHandler:
         if old_owner_id != new_owner_id:
             self.event_dispatcher.publish(
                 MotorVehicleOwnerChanged(
-                    vehicle_id=vehicle.id,
+                    vin=vehicle.vin,
                     old_owner_id=old_owner_id,
                     new_owner_id=new_owner_id,
                 )
@@ -298,17 +295,17 @@ class TransactionCommandHandler:
         """
         from customer_management.domain.models import Customer
 
-        customer = Customer.objects.filter(id=command.customer_id).first()
+        customer = Customer.objects.filter(customer_id=command.customer_id).first()
         if not customer:
             raise ValueError(f"Customer with ID {command.customer_id} not found")
 
-        vehicle = MotorVehicle.objects.filter(id=command.vehicle_id).first()
+        vehicle = MotorVehicle.objects.filter(vin=command.vin).first()
         if not vehicle:
-            raise ValueError(f"Vehicle with ID {command.vehicle_id} not found")
+            raise ValueError(f"Vehicle with VIN {command.vin} not found")
 
         transaction = self.repository.create(
             customer_id=command.customer_id,
-            vehicle_id=command.vehicle_id,
+            vin=command.vin,
             transaction_type=command.transaction_type,
             transaction_date=command.transaction_date,
             transaction_amount=command.transaction_amount,

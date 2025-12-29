@@ -31,8 +31,6 @@ class MotorVehicle(models.Model):
         updated_at: Timestamp when the vehicle was last updated.
     """
 
-    id: int
-
     # Owner relationship
     owner = models.ForeignKey(
         "customer_management.Customer",
@@ -42,8 +40,8 @@ class MotorVehicle(models.Model):
         related_name="vehicles",
     )
 
-    # Identification
-    vin = models.CharField(max_length=17, unique=True)
+    # Identification (VIN is primary key)
+    vin = models.CharField(max_length=17, primary_key=True)
     license_plate = models.CharField(max_length=16, blank=True)
     license_plate_state = models.CharField(max_length=32, blank=True)
 

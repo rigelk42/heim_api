@@ -10,21 +10,10 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class GetMotorVehicleQuery:
-    """Query to retrieve a single motor vehicle by ID.
+    """Query to retrieve a single motor vehicle by VIN.
 
     Attributes:
-        vehicle_id: The ID of the vehicle to retrieve.
-    """
-
-    vehicle_id: int
-
-
-@dataclass(frozen=True)
-class GetMotorVehicleByVINQuery:
-    """Query to retrieve a motor vehicle by VIN.
-
-    Attributes:
-        vin: The Vehicle Identification Number.
+        vin: The VIN of the vehicle to retrieve.
     """
 
     vin: str
@@ -58,10 +47,10 @@ class ListMotorVehiclesByOwnerQuery:
     """Query to list all motor vehicles owned by a specific customer.
 
     Attributes:
-        owner_id: The ID of the customer.
+        owner_id: The customer_id of the owner.
     """
 
-    owner_id: int
+    owner_id: str
 
 
 @dataclass(frozen=True)
@@ -90,10 +79,10 @@ class ListTransactionsByCustomerQuery:
     """Query to list all transactions for a specific customer.
 
     Attributes:
-        customer_id: The ID of the customer.
+        customer_id: The customer_id of the customer.
     """
 
-    customer_id: int
+    customer_id: str
 
 
 @dataclass(frozen=True)
@@ -101,7 +90,7 @@ class ListTransactionsByVehicleQuery:
     """Query to list all transactions for a specific vehicle.
 
     Attributes:
-        vehicle_id: The ID of the vehicle.
+        vin: The VIN of the vehicle.
     """
 
-    vehicle_id: int
+    vin: str
