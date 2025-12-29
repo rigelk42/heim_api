@@ -8,6 +8,7 @@ needed to perform a write operation.
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
+from uuid import UUID
 
 
 @dataclass(frozen=True)
@@ -100,13 +101,13 @@ class UpdateTransactionCommand:
     Only non-None fields will be updated.
 
     Attributes:
-        transaction_id: The ID of the transaction to update.
+        transaction_id: The UUID of the transaction to update.
         transaction_type: New transaction type (optional).
         transaction_date: New transaction date (optional).
         transaction_amount: New transaction amount (optional).
     """
 
-    transaction_id: int
+    transaction_id: UUID
     transaction_type: str | None = None
     transaction_date: date | None = None
     transaction_amount: Decimal | None = None
@@ -117,7 +118,7 @@ class DeleteTransactionCommand:
     """Command to delete a transaction.
 
     Attributes:
-        transaction_id: The ID of the transaction to delete.
+        transaction_id: The UUID of the transaction to delete.
     """
 
-    transaction_id: int
+    transaction_id: UUID

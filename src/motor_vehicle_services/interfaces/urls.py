@@ -27,7 +27,7 @@ urlpatterns = [
         name="transaction-list-create",
     ),
     path(
-        "transactions/<int:transaction_id>/",
+        "transactions/<uuid:transaction_id>/",
         views.TransactionDetailView.as_view(),
         name="transaction-detail",
     ),

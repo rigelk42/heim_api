@@ -8,6 +8,8 @@ must go through the Aggregate Root.
 
 from __future__ import annotations
 
+import uuid
+
 from django.db import models
 
 from .value_objects import VIN, LicensePlate
@@ -109,25 +111,31 @@ class Transaction(models.Model):
     Tracks transactions such as renewals, transfers, and credential replacements.
 
     Attributes:
+        transaction_id: Unique identifier for the transaction (UUID).
         customer: The customer involved in the transaction.
         vehicle: The vehicle involved in the transaction.
-        transaction_type: Type of transaction (renew, transfer, renew_rdf,
-            transfer_rdf, duplicate_title, replacement_credentials).
+        transaction_type: Type of transaction (RNW, TNSF, RNWRDF, TNSFRDF,
+            DUPTTL, RPLCRD, TNSFCLR, LNSL, NTRL).
         transaction_date: The date of the transaction.
         transaction_amount: The monetary amount of the transaction.
         created_at: Timestamp when the transaction was created.
         updated_at: Timestamp when the transaction was last updated.
     """
 
-    id: int
+    transaction_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
 
     TRANSACTION_TYPES = [
-        ("renew", "Renew"),
-        ("transfer", "Transfer"),
-        ("renew_rdf", "Renew RDF"),
-        ("transfer_rdf", "Transfer RDF"),
-        ("duplicate_title", "Duplicate Title"),
-        ("replacement_credentials", "Replacement Credentials"),
+        ("RNW", "Renew"),
+        ("TNSF", "Transfer"),
+        ("RNWRDF", "Renew RDF"),
+        ("TNSFRDF", "Transfer RDF"),
+        ("DUPTTL", "Duplicate Title"),
+        ("RPLCRD", "Replacement Credentials"),
+        ("TNSFCLR", "Transfer Clear"),
+        ("LNSL", "Lien Sale"),
+        ("NTRL", "Notice of Transfer and Release of Liability"),
     ]
 
     customer = models.ForeignKey(
@@ -141,7 +149,7 @@ class Transaction(models.Model):
         related_name="transactions",
     )
     transaction_type = models.CharField(
-        max_length=32, choices=TRANSACTION_TYPES, default="renew"
+        max_length=32, choices=TRANSACTION_TYPES, default="RNW"
     )
     transaction_date = models.DateField()
     transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -156,4 +164,4 @@ class Transaction(models.Model):
 
     def __str__(self) -> str:
         """Return a string representation of the transaction."""
-        return f"Transaction {self.id} - {self.customer} - {self.vehicle}"
+        return f"Transaction {self.transaction_id} - {self.customer} - {self.vehicle}"

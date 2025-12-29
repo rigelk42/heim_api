@@ -6,6 +6,7 @@ needed to perform a read operation.
 """
 
 from dataclasses import dataclass
+from uuid import UUID
 
 
 @dataclass(frozen=True)
@@ -58,10 +59,10 @@ class GetTransactionQuery:
     """Query to retrieve a single transaction by ID.
 
     Attributes:
-        transaction_id: The ID of the transaction to retrieve.
+        transaction_id: The UUID of the transaction to retrieve.
     """
 
-    transaction_id: int
+    transaction_id: UUID
 
 
 @dataclass(frozen=True)

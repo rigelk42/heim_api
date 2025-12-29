@@ -212,7 +212,7 @@ def _serialize_transaction(transaction) -> dict:
         A dictionary containing the transaction's data.
     """
     return {
-        "id": transaction.id,
+        "transaction_id": str(transaction.transaction_id),
         "customer_id": transaction.customer_id,
         "customer_name": (
             transaction.customer.full_name if transaction.customer else None
@@ -288,7 +288,7 @@ class TransactionDetailView(APIView):
         self.command_handler = TransactionCommandHandler()
         self.query_handler = TransactionQueryHandler()
 
-    def get(self, request, transaction_id: int):
+    def get(self, request, transaction_id: str):
         """Retrieve a transaction by ID."""
         query = GetTransactionQuery(transaction_id=transaction_id)
 
@@ -301,7 +301,7 @@ class TransactionDetailView(APIView):
 
         return Response(_serialize_transaction(transaction))
 
-    def patch(self, request, transaction_id: int):
+    def patch(self, request, transaction_id: str):
         """Update a transaction."""
         transaction_type = request.data.get("transaction_type")
         transaction_date = None
@@ -345,7 +345,7 @@ class TransactionDetailView(APIView):
 
         return Response(_serialize_transaction(transaction))
 
-    def delete(self, request, transaction_id: int):
+    def delete(self, request, transaction_id: str):
         """Delete a transaction."""
         command = DeleteTransactionCommand(transaction_id=transaction_id)
 

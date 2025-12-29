@@ -39,9 +39,9 @@ class TransactionNotFound(MotorVehicleServiceException):
     """Raised when a transaction cannot be found by the given identifier.
 
     Attributes:
-        identifier: The transaction ID that was not found.
+        identifier: The transaction UUID that was not found.
     """
 
-    def __init__(self, identifier: int):
+    def __init__(self, identifier):
         self.identifier = identifier
         super().__init__(f"Transaction not found: {identifier}")

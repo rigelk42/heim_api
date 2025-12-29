@@ -33,7 +33,7 @@ class MotorVehicleAdmin(admin.ModelAdmin):
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = [
-        "id",
+        "transaction_id",
         "customer",
         "vehicle",
         "transaction_type",

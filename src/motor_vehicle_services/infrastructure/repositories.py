@@ -160,16 +160,16 @@ class TransactionRepository:
         """
         return Transaction.objects.all()
 
-    def get_by_id(self, transaction_id: int) -> Transaction | None:
+    def get_by_id(self, transaction_id) -> Transaction | None:
         """Retrieve a transaction by ID.
 
         Args:
-            transaction_id: The ID of the transaction to retrieve.
+            transaction_id: The UUID of the transaction to retrieve.
 
         Returns:
             The Transaction if found, None otherwise.
         """
-        return Transaction.objects.filter(id=transaction_id).first()
+        return Transaction.objects.filter(transaction_id=transaction_id).first()
 
     def get_by_customer(self, customer_id: str) -> QuerySet[Transaction]:
         """Retrieve all transactions for a specific customer.
