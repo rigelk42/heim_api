@@ -26,17 +26,17 @@ class GetCustomerQueryTest(TestCase):
         self.customer = self.command_handler.handle_create(create_command)
 
     def test_get_customer_success(self):
-        query = GetCustomerQuery(customer_id=self.customer.id)
+        query = GetCustomerQuery(customer_id=self.customer.customer_id)
 
         result = self.query_handler.handle_get(query)
 
-        self.assertEqual(result.id, self.customer.id)
+        self.assertEqual(result.customer_id, self.customer.customer_id)
         self.assertEqual(result.given_names, "John")
         self.assertEqual(result.surnames, "Doe")
         self.assertEqual(result.email, "john@example.com")
 
     def test_get_customer_not_found_raises(self):
-        query = GetCustomerQuery(customer_id=9999)
+        query = GetCustomerQuery(customer_id="C00000X0000000")
 
         with self.assertRaises(CustomerNotFound):
             self.query_handler.handle_get(query)
@@ -179,7 +179,7 @@ class GetCustomerAddressesQueryTest(TestCase):
         self.customer = self.command_handler.handle_create(create_command)
 
     def test_get_addresses_empty(self):
-        query = GetCustomerAddressesQuery(customer_id=self.customer.id)
+        query = GetCustomerAddressesQuery(customer_id=self.customer.customer_id)
 
         result = self.query_handler.handle_get_addresses(query)
 
@@ -188,7 +188,7 @@ class GetCustomerAddressesQueryTest(TestCase):
     def test_get_addresses_returns_all(self):
         self.command_handler.handle_add_address(
             AddCustomerAddressCommand(
-                customer_id=self.customer.id,
+                customer_id=self.customer.customer_id,
                 address_line_1="123 Main St",
                 city="New York",
                 postal_code="10001",
@@ -197,7 +197,7 @@ class GetCustomerAddressesQueryTest(TestCase):
         )
         self.command_handler.handle_add_address(
             AddCustomerAddressCommand(
-                customer_id=self.customer.id,
+                customer_id=self.customer.customer_id,
                 address_line_1="456 Oak Ave",
                 city="Boston",
                 postal_code="02101",
@@ -205,14 +205,14 @@ class GetCustomerAddressesQueryTest(TestCase):
             )
         )
 
-        query = GetCustomerAddressesQuery(customer_id=self.customer.id)
+        query = GetCustomerAddressesQuery(customer_id=self.customer.customer_id)
 
         result = self.query_handler.handle_get_addresses(query)
 
         self.assertEqual(result.count(), 2)
 
     def test_get_addresses_customer_not_found_raises(self):
-        query = GetCustomerAddressesQuery(customer_id=9999)
+        query = GetCustomerAddressesQuery(customer_id="C00000X0000000")
 
         with self.assertRaises(CustomerNotFound):
             self.query_handler.handle_get_addresses(query)

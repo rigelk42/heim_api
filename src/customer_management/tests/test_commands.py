@@ -82,7 +82,7 @@ class UpdateCustomerCommandTest(TestCase):
 
     def test_update_customer_given_names(self):
         command = UpdateCustomerCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             given_names="Johnny",
         )
 
@@ -93,7 +93,7 @@ class UpdateCustomerCommandTest(TestCase):
 
     def test_update_customer_surnames(self):
         command = UpdateCustomerCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             surnames="Smith",
         )
 
@@ -104,7 +104,7 @@ class UpdateCustomerCommandTest(TestCase):
 
     def test_update_customer_phone(self):
         command = UpdateCustomerCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             phone="555-1234",
         )
 
@@ -114,7 +114,7 @@ class UpdateCustomerCommandTest(TestCase):
 
     def test_update_customer_not_found_raises(self):
         command = UpdateCustomerCommand(
-            customer_id=9999,
+            customer_id="C00000X0000000",
             given_names="Johnny",
         )
 
@@ -134,7 +134,7 @@ class UpdateCustomerEmailCommandTest(TestCase):
 
     def test_update_email_success(self):
         command = UpdateCustomerEmailCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             email="johnny@example.com",
         )
 
@@ -144,7 +144,7 @@ class UpdateCustomerEmailCommandTest(TestCase):
 
     def test_update_email_same_email_no_change(self):
         command = UpdateCustomerEmailCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             email="john@example.com",
         )
 
@@ -161,7 +161,7 @@ class UpdateCustomerEmailCommandTest(TestCase):
         self.handler.handle_create(other_command)
 
         command = UpdateCustomerEmailCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             email="jane@example.com",
         )
 
@@ -180,14 +180,14 @@ class DeleteCustomerCommandTest(TestCase):
         self.customer = self.handler.handle_create(create_command)
 
     def test_delete_customer_success(self):
-        command = DeleteCustomerCommand(customer_id=self.customer.id)
+        command = DeleteCustomerCommand(customer_id=self.customer.customer_id)
 
         self.handler.handle_delete(command)
 
         self.assertEqual(Customer.objects.count(), 0)
 
     def test_delete_customer_not_found_raises(self):
-        command = DeleteCustomerCommand(customer_id=9999)
+        command = DeleteCustomerCommand(customer_id="C00000X0000000")
 
         with self.assertRaises(CustomerNotFound):
             self.handler.handle_delete(command)
@@ -205,7 +205,7 @@ class AddCustomerAddressCommandTest(TestCase):
 
     def test_add_address_success(self):
         command = AddCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_line_1="123 Main St",
             address_line_2="Apt 4B",
             city="New York",
@@ -222,11 +222,11 @@ class AddCustomerAddressCommandTest(TestCase):
         self.assertEqual(address.state_province, "NY")
         self.assertEqual(address.postal_code, "10001")
         self.assertEqual(address.country, "USA")
-        self.assertEqual(address.customer_id, self.customer.id)
+        self.assertEqual(address.customer_id, self.customer.customer_id)
 
     def test_add_primary_address_clears_previous_primary(self):
         first_command = AddCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_line_1="123 Main St",
             city="New York",
             postal_code="10001",
@@ -236,7 +236,7 @@ class AddCustomerAddressCommandTest(TestCase):
         first_address = self.handler.handle_add_address(first_command)
 
         second_command = AddCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_line_1="456 Oak Ave",
             city="Boston",
             postal_code="02101",
@@ -251,7 +251,7 @@ class AddCustomerAddressCommandTest(TestCase):
 
     def test_add_address_customer_not_found_raises(self):
         command = AddCustomerAddressCommand(
-            customer_id=9999,
+            customer_id="C00000X0000000",
             address_line_1="123 Main St",
             city="New York",
             postal_code="10001",
@@ -273,7 +273,7 @@ class RemoveCustomerAddressCommandTest(TestCase):
         self.customer = self.handler.handle_create(create_command)
 
         add_address_command = AddCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_line_1="123 Main St",
             city="New York",
             postal_code="10001",
@@ -283,7 +283,7 @@ class RemoveCustomerAddressCommandTest(TestCase):
 
     def test_remove_address_success(self):
         command = RemoveCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_id=self.address.id,
         )
 
@@ -294,7 +294,7 @@ class RemoveCustomerAddressCommandTest(TestCase):
 
     def test_remove_address_not_found_returns_false(self):
         command = RemoveCustomerAddressCommand(
-            customer_id=self.customer.id,
+            customer_id=self.customer.customer_id,
             address_id=9999,
         )
 
@@ -304,7 +304,7 @@ class RemoveCustomerAddressCommandTest(TestCase):
 
     def test_remove_address_customer_not_found_raises(self):
         command = RemoveCustomerAddressCommand(
-            customer_id=9999,
+            customer_id="C00000X0000000",
             address_id=self.address.id,
         )
 

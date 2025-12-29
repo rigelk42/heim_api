@@ -34,7 +34,7 @@ class EventDispatcherTest(TestCase):
             self.received_events.append(event)
 
         self.dispatcher.subscribe(CustomerCreated, handler)
-        event = CustomerCreated(customer_id=1, email="test@example.com")
+        event = CustomerCreated(customer_id="C25363A1435532", email="test@example.com")
         self.dispatcher.publish(event)
 
         self.assertEqual(len(self.received_events), 1)
@@ -47,7 +47,7 @@ class EventDispatcherTest(TestCase):
         self.dispatcher.subscribe(CustomerCreated, lambda e: handler1_events.append(e))
         self.dispatcher.subscribe(CustomerCreated, lambda e: handler2_events.append(e))
 
-        event = CustomerCreated(customer_id=1, email="test@example.com")
+        event = CustomerCreated(customer_id="C25363A1435532", email="test@example.com")
         self.dispatcher.publish(event)
 
         self.assertEqual(len(handler1_events), 1)
@@ -60,7 +60,7 @@ class EventDispatcherTest(TestCase):
         self.dispatcher.subscribe(CustomerCreated, handler)
         self.dispatcher.unsubscribe(CustomerCreated, handler)
 
-        event = CustomerCreated(customer_id=1, email="test@example.com")
+        event = CustomerCreated(customer_id="C25363A1435532", email="test@example.com")
         self.dispatcher.publish(event)
 
         self.assertEqual(len(self.received_events), 0)
@@ -77,7 +77,7 @@ class EventDispatcherTest(TestCase):
         self.dispatcher.subscribe(CustomerCreated, handler)
         self.dispatcher.clear()
 
-        event = CustomerCreated(customer_id=1, email="test@example.com")
+        event = CustomerCreated(customer_id="C25363A1435532", email="test@example.com")
         self.dispatcher.publish(event)
 
         self.assertEqual(len(self.received_events), 0)
@@ -125,7 +125,7 @@ class CommandHandlerEventsTest(TestCase):
         self.assertEqual(len(self.received_events), 1)
         event = self.received_events[0]
         self.assertIsInstance(event, CustomerCreated)
-        self.assertEqual(event.customer_id, customer.id)
+        self.assertEqual(event.customer_id, customer.customer_id)
         self.assertEqual(event.email, "john@example.com")
         self.assertEqual(event.given_names, "John")
         self.assertEqual(event.surnames, "Doe")
@@ -140,7 +140,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         update_command = UpdateCustomerCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             given_names="Johnny",
         )
         self.handler.handle_update(update_command)
@@ -148,7 +148,7 @@ class CommandHandlerEventsTest(TestCase):
         self.assertEqual(len(self.received_events), 1)
         event = self.received_events[0]
         self.assertIsInstance(event, CustomerUpdated)
-        self.assertEqual(event.customer_id, customer.id)
+        self.assertEqual(event.customer_id, customer.customer_id)
         self.assertIn(("given_names", "Johnny"), event.changes)
 
     def test_update_customer_no_changes_no_event(self):
@@ -160,7 +160,7 @@ class CommandHandlerEventsTest(TestCase):
         customer = self.handler.handle_create(create_command)
         self.received_events.clear()
 
-        update_command = UpdateCustomerCommand(customer_id=customer.id)
+        update_command = UpdateCustomerCommand(customer_id=customer.customer_id)
         self.handler.handle_update(update_command)
 
         self.assertEqual(len(self.received_events), 0)
@@ -175,7 +175,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         email_command = UpdateCustomerEmailCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             email="johnny@example.com",
         )
         self.handler.handle_update_email(email_command)
@@ -183,7 +183,7 @@ class CommandHandlerEventsTest(TestCase):
         self.assertEqual(len(self.received_events), 1)
         event = self.received_events[0]
         self.assertIsInstance(event, CustomerEmailChanged)
-        self.assertEqual(event.customer_id, customer.id)
+        self.assertEqual(event.customer_id, customer.customer_id)
         self.assertEqual(event.old_email, "john@example.com")
         self.assertEqual(event.new_email, "johnny@example.com")
 
@@ -197,7 +197,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         email_command = UpdateCustomerEmailCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             email="john@example.com",
         )
         self.handler.handle_update_email(email_command)
@@ -211,7 +211,7 @@ class CommandHandlerEventsTest(TestCase):
             email="john@example.com",
         )
         customer = self.handler.handle_create(create_command)
-        customer_id = customer.id
+        customer_id = customer.customer_id
         self.received_events.clear()
 
         delete_command = DeleteCustomerCommand(customer_id=customer_id)
@@ -233,7 +233,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         address_command = AddCustomerAddressCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             address_line_1="123 Main St",
             city="New York",
             postal_code="10001",
@@ -246,7 +246,7 @@ class CommandHandlerEventsTest(TestCase):
         self.assertEqual(len(self.received_events), 1)
         event = self.received_events[0]
         self.assertIsInstance(event, CustomerAddressAdded)
-        self.assertEqual(event.customer_id, customer.id)
+        self.assertEqual(event.customer_id, customer.customer_id)
         self.assertEqual(event.address_id, address.id)
         self.assertEqual(event.address_type, "home")
         self.assertTrue(event.is_primary)
@@ -260,7 +260,7 @@ class CommandHandlerEventsTest(TestCase):
         customer = self.handler.handle_create(create_command)
 
         address_command = AddCustomerAddressCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             address_line_1="123 Main St",
             city="New York",
             postal_code="10001",
@@ -270,7 +270,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         remove_command = RemoveCustomerAddressCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             address_id=address.id,
         )
         self.handler.handle_remove_address(remove_command)
@@ -278,7 +278,7 @@ class CommandHandlerEventsTest(TestCase):
         self.assertEqual(len(self.received_events), 1)
         event = self.received_events[0]
         self.assertIsInstance(event, CustomerAddressRemoved)
-        self.assertEqual(event.customer_id, customer.id)
+        self.assertEqual(event.customer_id, customer.customer_id)
         self.assertEqual(event.address_id, address.id)
 
     def test_remove_nonexistent_address_no_event(self):
@@ -291,7 +291,7 @@ class CommandHandlerEventsTest(TestCase):
         self.received_events.clear()
 
         remove_command = RemoveCustomerAddressCommand(
-            customer_id=customer.id,
+            customer_id=customer.customer_id,
             address_id=9999,
         )
         self.handler.handle_remove_address(remove_command)
