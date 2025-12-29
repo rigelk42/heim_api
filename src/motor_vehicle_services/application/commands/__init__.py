@@ -11,7 +11,6 @@ from .dtos import (
     DeleteTransactionCommand,
     TransferOwnershipCommand,
     UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand,
     UpdateTransactionCommand,
 )
 from .handlers import MotorVehicleCommandHandler, TransactionCommandHandler
@@ -19,7 +18,6 @@ from .handlers import MotorVehicleCommandHandler, TransactionCommandHandler
 __all__ = [
     "CreateMotorVehicleCommand",
     "UpdateMotorVehicleCommand",
-    "UpdateMotorVehicleMileageCommand",
     "DeleteMotorVehicleCommand",
     "TransferOwnershipCommand",
     "MotorVehicleCommandHandler",

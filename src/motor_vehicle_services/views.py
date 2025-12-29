@@ -8,7 +8,6 @@ from motor_vehicle_services.interfaces.views import (
     MotorVehicleByVINView,
     MotorVehicleDetailView,
     MotorVehicleListCreateView,
-    MotorVehicleMileageView,
     MotorVehicleStatusView,
 )
 
@@ -16,6 +15,5 @@ __all__ = [
     "MotorVehicleListCreateView",
     "MotorVehicleDetailView",
     "MotorVehicleByVINView",
-    "MotorVehicleMileageView",
     "MotorVehicleStatusView",
 ]

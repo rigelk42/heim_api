@@ -9,11 +9,9 @@ The interface layer handles external communication:
 from .views import (
     MotorVehicleDetailView,
     MotorVehicleListCreateView,
-    MotorVehicleMileageView,
 )
 
 __all__ = [
     "MotorVehicleListCreateView",
     "MotorVehicleDetailView",
-    "MotorVehicleMileageView",
 ]

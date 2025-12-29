@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from django.db import models
 
-from .value_objects import VIN, LicensePlate, Mileage
+from .value_objects import VIN, LicensePlate
 
 
 class MotorVehicle(models.Model):
@@ -26,7 +26,6 @@ class MotorVehicle(models.Model):
         make: Vehicle manufacturer (e.g., Honda, Toyota).
         model: Vehicle model name (e.g., Accord, Camry).
         year: Model year.
-        mileage_km: Current mileage in kilometers.
         created_at: Timestamp when the vehicle was registered.
         updated_at: Timestamp when the vehicle was last updated.
     """
@@ -49,9 +48,6 @@ class MotorVehicle(models.Model):
     make = models.CharField(max_length=64)
     model = models.CharField(max_length=64)
     year = models.PositiveIntegerField()
-
-    # Current state
-    mileage_km = models.PositiveIntegerField(default=0)
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -89,14 +85,6 @@ class MotorVehicle(models.Model):
             self.license_plate = plate.value
             self.license_plate_state = plate.state_province
 
-    def get_mileage(self) -> Mileage:
-        """Return the mileage as a value object."""
-        return Mileage(value=self.mileage_km, unit="km")
-
-    def set_mileage(self, mileage: Mileage) -> None:
-        """Set the mileage from a value object (converts to km)."""
-        self.mileage_km = mileage.in_kilometers
-
     # --- Computed properties ---
 
     @property
@@ -113,25 +101,6 @@ class MotorVehicle(models.Model):
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.vin})"
-
-    # --- Domain operations ---
-
-    def update_mileage(self, new_mileage: Mileage) -> None:
-        """Update the vehicle's mileage.
-
-        Args:
-            new_mileage: The new mileage reading.
-
-        Raises:
-            ValueError: If the new mileage is less than the current mileage.
-        """
-        new_km = new_mileage.in_kilometers
-        if new_km < self.mileage_km:
-            raise ValueError(
-                f"New mileage ({new_km} km) cannot be less than "
-                f"current mileage ({self.mileage_km} km)"
-            )
-        self.mileage_km = new_km
 
 
 class Transaction(models.Model):

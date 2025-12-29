@@ -102,7 +102,6 @@ class MotorVehicleRepository:
         make: str,
         model: str,
         year: int,
-        mileage_km: int = 0,
         license_plate: str = "",
         license_plate_state: str = "",
         owner_id: str | None = None,
@@ -114,7 +113,6 @@ class MotorVehicleRepository:
             make: Vehicle manufacturer.
             model: Vehicle model name.
             year: Model year.
-            mileage_km: Current mileage in kilometers.
             license_plate: License plate number.
             license_plate_state: License plate issuing state.
             owner_id: ID of the owning customer.
@@ -130,7 +128,6 @@ class MotorVehicleRepository:
             make=make,
             model=model,
             year=year,
-            mileage_km=mileage_km,
             license_plate=license_plate.upper() if license_plate else "",
             license_plate_state=license_plate_state,
             owner_id=owner_id,

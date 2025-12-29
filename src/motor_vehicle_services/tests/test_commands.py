@@ -9,7 +9,6 @@ from motor_vehicle_services.application import (
     MotorVehicleCommandHandler,
     TransferOwnershipCommand,
     UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand,
 )
 from motor_vehicle_services.domain import (
     MotorVehicle,
@@ -28,7 +27,6 @@ class CreateMotorVehicleCommandTest(TestCase):
             make="Honda",
             model="Accord",
             year=2020,
-            mileage_km=50000,
         )
 
         vehicle = self.handler.handle_create(command)
@@ -37,7 +35,6 @@ class CreateMotorVehicleCommandTest(TestCase):
         self.assertEqual(vehicle.make, "Honda")
         self.assertEqual(vehicle.model, "Accord")
         self.assertEqual(vehicle.year, 2020)
-        self.assertEqual(vehicle.mileage_km, 50000)
         self.assertEqual(MotorVehicle.objects.count(), 1)
 
     def test_create_vehicle_with_license_plate(self):
@@ -140,59 +137,6 @@ class UpdateMotorVehicleCommandTest(TestCase):
 
         with self.assertRaises(MotorVehicleNotFound):
             self.handler.handle_update(command)
-
-
-class UpdateMotorVehicleMileageCommandTest(TestCase):
-    def setUp(self):
-        self.handler = MotorVehicleCommandHandler()
-        create_command = CreateMotorVehicleCommand(
-            vin="1HGCM82633A004352",
-            make="Honda",
-            model="Accord",
-            year=2020,
-            mileage_km=50000,
-        )
-        self.vehicle = self.handler.handle_create(create_command)
-
-    def test_update_mileage_success(self):
-        command = UpdateMotorVehicleMileageCommand(
-            vin=self.vehicle.vin,
-            mileage_km=55000,
-        )
-
-        updated = self.handler.handle_update_mileage(command)
-
-        self.assertEqual(updated.mileage_km, 55000)
-
-    def test_update_mileage_same_value_success(self):
-        command = UpdateMotorVehicleMileageCommand(
-            vin=self.vehicle.vin,
-            mileage_km=50000,
-        )
-
-        updated = self.handler.handle_update_mileage(command)
-
-        self.assertEqual(updated.mileage_km, 50000)
-
-    def test_update_mileage_lower_than_current_raises(self):
-        command = UpdateMotorVehicleMileageCommand(
-            vin=self.vehicle.vin,
-            mileage_km=40000,  # Less than current 50000
-        )
-
-        with self.assertRaises(ValueError) as context:
-            self.handler.handle_update_mileage(command)
-
-        self.assertIn("cannot be less than", str(context.exception))
-
-    def test_update_mileage_vehicle_not_found_raises(self):
-        command = UpdateMotorVehicleMileageCommand(
-            vin="XXXXXXXXXXXXXXXXX",
-            mileage_km=60000,
-        )
-
-        with self.assertRaises(MotorVehicleNotFound):
-            self.handler.handle_update_mileage(command)
 
 
 class DeleteMotorVehicleCommandTest(TestCase):

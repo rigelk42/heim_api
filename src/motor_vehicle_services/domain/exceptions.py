@@ -35,23 +35,6 @@ class MotorVehicleAlreadyExists(MotorVehicleServiceException):
         super().__init__(f"Motor vehicle with VIN {vin} already exists")
 
 
-class InvalidMileageUpdate(MotorVehicleServiceException):
-    """Raised when attempting to set mileage lower than current reading.
-
-    Attributes:
-        current_mileage: The current mileage reading.
-        new_mileage: The attempted new mileage reading.
-    """
-
-    def __init__(self, current_mileage: int, new_mileage: int):
-        self.current_mileage = current_mileage
-        self.new_mileage = new_mileage
-        super().__init__(
-            f"Cannot set mileage to {new_mileage} km; "
-            f"current mileage is {current_mileage} km"
-        )
-
-
 class TransactionNotFound(MotorVehicleServiceException):
     """Raised when a transaction cannot be found by the given identifier.
 

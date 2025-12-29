@@ -156,7 +156,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\",\n    \"owner_id\": null\n}"
+							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\",\n    \"owner_id\": null\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}",
@@ -211,28 +211,6 @@
 							"path": ["{{vehicle_id}}", ""]
 						},
 						"description": "Update a vehicle's license plate details"
-					}
-				},
-				{
-					"name": "Update Vehicle Mileage",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"mileage_km\": 55000\n}"
-						},
-						"url": {
-							"raw": "{{vehicles_url}}/{{vehicle_id}}/mileage/",
-							"host": ["{{vehicles_url}}"],
-							"path": ["{{vehicle_id}}", "mileage", ""]
-						},
-						"description": "Update a vehicle's mileage"
 					}
 				},
 				{

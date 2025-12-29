@@ -11,11 +11,6 @@ urlpatterns = [
     path("", views.MotorVehicleListCreateView.as_view(), name="list-create"),
     path("<str:vin>/", views.MotorVehicleDetailView.as_view(), name="detail"),
     path(
-        "<str:vin>/mileage/",
-        views.MotorVehicleMileageView.as_view(),
-        name="mileage",
-    ),
-    path(
         "<str:vin>/owner/",
         views.MotorVehicleOwnerView.as_view(),
         name="owner",

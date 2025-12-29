@@ -19,7 +19,6 @@ class CreateMotorVehicleCommand:
         make: Vehicle manufacturer.
         model: Vehicle model name.
         year: Model year.
-        mileage_km: Current mileage in kilometers.
         license_plate: License plate number (optional).
         license_plate_state: Issuing state/province (optional).
         owner_id: ID of the customer who owns this vehicle (optional).
@@ -29,7 +28,6 @@ class CreateMotorVehicleCommand:
     make: str
     model: str
     year: int
-    mileage_km: int = 0
     license_plate: str = ""
     license_plate_state: str = ""
     owner_id: str | None = None
@@ -50,19 +48,6 @@ class UpdateMotorVehicleCommand:
     vin: str
     license_plate: str | None = None
     license_plate_state: str | None = None
-
-
-@dataclass(frozen=True)
-class UpdateMotorVehicleMileageCommand:
-    """Command to update a vehicle's mileage.
-
-    Attributes:
-        vin: The VIN of the vehicle to update.
-        mileage_km: The new mileage in kilometers.
-    """
-
-    vin: str
-    mileage_km: int
 
 
 @dataclass(frozen=True)

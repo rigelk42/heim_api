@@ -13,7 +13,6 @@ class MotorVehicleAdmin(admin.ModelAdmin):
         "model",
         "year",
         "license_plate",
-        "mileage_km",
         "created_at",
     ]
     list_filter = ["make", "year"]
@@ -24,7 +23,6 @@ class MotorVehicleAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Identification", {"fields": ("vin", "license_plate", "license_plate_state")}),
         ("Vehicle Details", {"fields": ("make", "model", "year")}),
-        ("Mileage", {"fields": ("mileage_km",)}),
         (
             "Timestamps",
             {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},

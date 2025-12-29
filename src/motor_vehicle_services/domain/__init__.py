@@ -12,18 +12,16 @@ from .events import (
     DomainEvent,
     MotorVehicleCreated,
     MotorVehicleDeleted,
-    MotorVehicleMileageUpdated,
     MotorVehicleOwnerChanged,
     MotorVehicleUpdated,
 )
 from .exceptions import (
-    InvalidMileageUpdate,
     MotorVehicleAlreadyExists,
     MotorVehicleNotFound,
     MotorVehicleServiceException,
 )
 from .models import MotorVehicle
-from .value_objects import VIN, LicensePlate, Mileage
+from .value_objects import VIN, LicensePlate
 
 __all__ = [
     # Models
@@ -31,17 +29,14 @@ __all__ = [
     # Value Objects
     "VIN",
     "LicensePlate",
-    "Mileage",
     # Events
     "DomainEvent",
     "MotorVehicleCreated",
     "MotorVehicleUpdated",
-    "MotorVehicleMileageUpdated",
     "MotorVehicleOwnerChanged",
     "MotorVehicleDeleted",
     # Exceptions
     "MotorVehicleServiceException",
     "MotorVehicleNotFound",
     "MotorVehicleAlreadyExists",
-    "InvalidMileageUpdate",
 ]

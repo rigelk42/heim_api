@@ -30,7 +30,6 @@ from motor_vehicle_services.application import (
     TransactionQueryHandler,
     TransferOwnershipCommand,
     UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand,
     UpdateTransactionCommand,
 )
 from motor_vehicle_services.domain.exceptions import (
@@ -56,7 +55,6 @@ def _serialize_vehicle(vehicle) -> dict:
         "make": vehicle.make,
         "model": vehicle.model,
         "year": vehicle.year,
-        "mileage_km": vehicle.mileage_km,
         "full_name": vehicle.full_name,
         "owner_id": vehicle.owner_id,
         "owner_name": vehicle.owner_name,
@@ -92,7 +90,6 @@ class MotorVehicleListCreateView(APIView):
             make=request.data.get("make", ""),
             model=request.data.get("model", ""),
             year=request.data.get("year", 0),
-            mileage_km=request.data.get("mileage_km", 0),
             license_plate=request.data.get("license_plate", ""),
             license_plate_state=request.data.get("license_plate_state", ""),
             owner_id=request.data.get("owner_id"),
@@ -160,38 +157,6 @@ class MotorVehicleDetailView(APIView):
             )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class MotorVehicleMileageView(APIView):
-    """View for updating a motor vehicle's mileage."""
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.command_handler = MotorVehicleCommandHandler()
-
-    def patch(self, request, vin: str):
-        """Update the mileage of a motor vehicle."""
-        mileage_km = request.data.get("mileage_km")
-        if mileage_km is None:
-            return Response(
-                {"error": "mileage_km is required"}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        command = UpdateMotorVehicleMileageCommand(
-            vin=vin,
-            mileage_km=mileage_km,
-        )
-
-        try:
-            vehicle = self.command_handler.handle_update_mileage(command)
-        except MotorVehicleNotFound:
-            return Response(
-                {"error": "Motor vehicle not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        except ValueError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(_serialize_vehicle(vehicle))
 
 
 class MotorVehicleOwnerView(APIView):

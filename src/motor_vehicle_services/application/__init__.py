@@ -16,7 +16,6 @@ from .commands import (
     TransactionCommandHandler,
     TransferOwnershipCommand,
     UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand,
     UpdateTransactionCommand,
 )
 from .queries import (
@@ -36,7 +35,6 @@ __all__ = [
     # Motor Vehicle Commands
     "CreateMotorVehicleCommand",
     "UpdateMotorVehicleCommand",
-    "UpdateMotorVehicleMileageCommand",
     "DeleteMotorVehicleCommand",
     "TransferOwnershipCommand",
     "MotorVehicleCommandHandler",

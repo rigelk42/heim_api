@@ -60,21 +60,6 @@ class MotorVehicleUpdated(DomainEvent):
 
 
 @dataclass(frozen=True)
-class MotorVehicleMileageUpdated(DomainEvent):
-    """Event raised when a vehicle's mileage is updated.
-
-    Attributes:
-        vin: The VIN of the vehicle.
-        old_mileage_km: The previous mileage in kilometers.
-        new_mileage_km: The new mileage in kilometers.
-    """
-
-    vin: str = ""
-    old_mileage_km: int = 0
-    new_mileage_km: int = 0
-
-
-@dataclass(frozen=True)
 class MotorVehicleOwnerChanged(DomainEvent):
     """Event raised when a vehicle's owner changes.
 

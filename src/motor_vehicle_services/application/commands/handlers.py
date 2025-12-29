@@ -8,7 +8,6 @@ and infrastructure layer.
 from motor_vehicle_services.domain.events import (
     MotorVehicleCreated,
     MotorVehicleDeleted,
-    MotorVehicleMileageUpdated,
     MotorVehicleOwnerChanged,
     MotorVehicleUpdated,
 )
@@ -32,7 +31,6 @@ from .dtos import (
     DeleteTransactionCommand,
     TransferOwnershipCommand,
     UpdateMotorVehicleCommand,
-    UpdateMotorVehicleMileageCommand,
     UpdateTransactionCommand,
 )
 
@@ -90,7 +88,6 @@ class MotorVehicleCommandHandler:
             make=command.make,
             model=command.model,
             year=command.year,
-            mileage_km=command.mileage_km,
             license_plate=command.license_plate,
             license_plate_state=command.license_plate_state,
             owner_id=command.owner_id,
@@ -144,48 +141,6 @@ class MotorVehicleCommandHandler:
                     changes=tuple(changes),
                 )
             )
-
-        return vehicle
-
-    def handle_update_mileage(
-        self, command: UpdateMotorVehicleMileageCommand
-    ) -> MotorVehicle:
-        """Update a motor vehicle's mileage.
-
-        Publishes a MotorVehicleMileageUpdated event on success.
-
-        Args:
-            command: The update mileage command.
-
-        Returns:
-            The updated MotorVehicle.
-
-        Raises:
-            MotorVehicleNotFound: If the vehicle does not exist.
-            ValueError: If the new mileage is less than current.
-        """
-        vehicle = self.repository.get_by_vin(command.vin)
-        if not vehicle:
-            raise MotorVehicleNotFound(command.vin)
-
-        old_mileage = vehicle.mileage_km
-
-        if command.mileage_km < old_mileage:
-            raise ValueError(
-                f"New mileage ({command.mileage_km} km) cannot be less than "
-                f"current mileage ({old_mileage} km)"
-            )
-
-        vehicle.mileage_km = command.mileage_km
-        vehicle = self.repository.save(vehicle)
-
-        self.event_dispatcher.publish(
-            MotorVehicleMileageUpdated(
-                vin=vehicle.vin,
-                old_mileage_km=old_mileage,
-                new_mileage_km=vehicle.mileage_km,
-            )
-        )
 
         return vehicle
 
