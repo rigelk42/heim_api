@@ -38,11 +38,12 @@ class TransactionAdmin(admin.ModelAdmin):
         "id",
         "customer",
         "vehicle",
+        "transaction_type",
         "transaction_date",
         "transaction_amount",
         "created_at",
     ]
-    list_filter = ["transaction_date"]
+    list_filter = ["transaction_type", "transaction_date"]
     search_fields = [
         "customer__first_name",
         "customer__last_name",
@@ -55,7 +56,10 @@ class TransactionAdmin(admin.ModelAdmin):
     autocomplete_fields = ["customer", "vehicle"]
 
     fieldsets = (
-        ("Transaction Details", {"fields": ("customer", "vehicle")}),
+        (
+            "Transaction Details",
+            {"fields": ("customer", "vehicle", "transaction_type")},
+        ),
         ("Financial", {"fields": ("transaction_date", "transaction_amount")}),
         (
             "Timestamps",

@@ -336,14 +336,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"customer_id\": 1,\n    \"vehicle_id\": 1,\n    \"transaction_date\": \"2024-01-15\",\n    \"transaction_amount\": \"25000.00\"\n}"
+							"raw": "{\n    \"customer_id\": 1,\n    \"vehicle_id\": 1,\n    \"transaction_type\": \"renew\",\n    \"transaction_date\": \"2024-01-15\",\n    \"transaction_amount\": \"25000.00\"\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}/transactions/",
 							"host": ["{{vehicles_url}}"],
 							"path": ["transactions", ""]
 						},
-						"description": "Create a new transaction"
+						"description": "Create a new transaction. Valid transaction_type values: renew, transfer, renew_rdf, transfer_rdf, duplicate_title, replacement_credentials"
 					}
 				},
 				{
@@ -371,14 +371,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"transaction_amount\": \"27500.00\"\n}"
+							"raw": "{\n    \"transaction_type\": \"transfer\",\n    \"transaction_amount\": \"27500.00\"\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}/transactions/{{transaction_id}}/",
 							"host": ["{{vehicles_url}}"],
 							"path": ["transactions", "{{transaction_id}}", ""]
 						},
-						"description": "Update a transaction"
+						"description": "Update a transaction. Valid transaction_type values: renew, transfer, renew_rdf, transfer_rdf, duplicate_title, replacement_credentials"
 					}
 				},
 				{

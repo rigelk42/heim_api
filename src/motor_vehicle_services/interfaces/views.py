@@ -263,6 +263,7 @@ def _serialize_transaction(transaction) -> dict:
         ),
         "vehicle_id": transaction.vehicle_id,
         "vehicle_name": transaction.vehicle.full_name if transaction.vehicle else None,
+        "transaction_type": transaction.transaction_type,
         "transaction_date": transaction.transaction_date.isoformat(),
         "transaction_amount": str(transaction.transaction_amount),
         "created_at": transaction.created_at.isoformat(),
@@ -308,6 +309,7 @@ class TransactionListCreateView(APIView):
         command = CreateTransactionCommand(
             customer_id=request.data.get("customer_id", 0),
             vehicle_id=request.data.get("vehicle_id", 0),
+            transaction_type=request.data.get("transaction_type", "renew"),
             transaction_date=transaction_date,
             transaction_amount=transaction_amount,
         )
@@ -345,6 +347,7 @@ class TransactionDetailView(APIView):
 
     def patch(self, request, transaction_id: int):
         """Update a transaction."""
+        transaction_type = request.data.get("transaction_type")
         transaction_date = None
         transaction_amount = None
 
@@ -372,6 +375,7 @@ class TransactionDetailView(APIView):
 
         command = UpdateTransactionCommand(
             transaction_id=transaction_id,
+            transaction_type=transaction_type,
             transaction_date=transaction_date,
             transaction_amount=transaction_amount,
         )

@@ -133,6 +133,15 @@ class Transaction(models.Model):
 
     id: int
 
+    TRANSACTION_TYPES = [
+        ("renew", "Renew"),
+        ("transfer", "Transfer"),
+        ("renew_rdf", "Renew RDF"),
+        ("transfer_rdf", "Transfer RDF"),
+        ("duplicate_title", "Duplicate Title"),
+        ("replacement_credentials", "Replacement Credentials"),
+    ]
+
     customer = models.ForeignKey(
         "customer_management.Customer",
         on_delete=models.PROTECT,
@@ -142,6 +151,9 @@ class Transaction(models.Model):
         MotorVehicle,
         on_delete=models.PROTECT,
         related_name="transactions",
+    )
+    transaction_type = models.CharField(
+        max_length=32, choices=TRANSACTION_TYPES, default="renew"
     )
     transaction_date = models.DateField()
     transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)

@@ -309,6 +309,7 @@ class TransactionCommandHandler:
         transaction = self.repository.create(
             customer_id=command.customer_id,
             vehicle_id=command.vehicle_id,
+            transaction_type=command.transaction_type,
             transaction_date=command.transaction_date,
             transaction_amount=command.transaction_amount,
         )
@@ -330,6 +331,9 @@ class TransactionCommandHandler:
         transaction = self.repository.get_by_id(command.transaction_id)
         if not transaction:
             raise TransactionNotFound(command.transaction_id)
+
+        if command.transaction_type is not None:
+            transaction.transaction_type = command.transaction_type
 
         if command.transaction_date is not None:
             transaction.transaction_date = command.transaction_date

@@ -227,6 +227,7 @@ class TransactionRepository:
         self,
         customer_id: int,
         vehicle_id: int,
+        transaction_type: str,
         transaction_date: date,
         transaction_amount: Decimal,
     ) -> Transaction:
@@ -235,6 +236,7 @@ class TransactionRepository:
         Args:
             customer_id: The ID of the customer.
             vehicle_id: The ID of the vehicle.
+            transaction_type: The type of transaction.
             transaction_date: The date of the transaction.
             transaction_amount: The transaction amount.
 
@@ -247,6 +249,7 @@ class TransactionRepository:
         transaction = Transaction(
             customer_id=customer_id,
             vehicle_id=vehicle_id,
+            transaction_type=transaction_type,
             transaction_date=transaction_date,
             transaction_amount=transaction_amount,
         )
