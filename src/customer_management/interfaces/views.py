@@ -36,7 +36,7 @@ class CustomerListCreateView(APIView):
 
         data = [
             {
-                "id": c.id,
+                "customer_id": c.customer_id,
                 "given_names": c.given_names,
                 "surnames": c.surnames,
                 "full_name": c.full_name,
@@ -64,7 +64,7 @@ class CustomerListCreateView(APIView):
 
         return Response(
             {
-                "id": customer.id,
+                "customer_id": customer.customer_id,
                 "given_names": customer.given_names,
                 "surnames": customer.surnames,
                 "full_name": customer.full_name,
@@ -81,7 +81,7 @@ class CustomerDetailView(APIView):
         self.command_handler = CustomerCommandHandler()
         self.query_handler = CustomerQueryHandler()
 
-    def get(self, request, customer_id: int):
+    def get(self, request, customer_id: str):
         query = GetCustomerQuery(customer_id=customer_id)
 
         try:
@@ -93,7 +93,7 @@ class CustomerDetailView(APIView):
 
         return Response(
             {
-                "id": customer.id,
+                "customer_id": customer.customer_id,
                 "given_names": customer.given_names,
                 "surnames": customer.surnames,
                 "full_name": customer.full_name,
@@ -102,7 +102,7 @@ class CustomerDetailView(APIView):
             }
         )
 
-    def patch(self, request, customer_id: int):
+    def patch(self, request, customer_id: str):
         command = UpdateCustomerCommand(
             customer_id=customer_id,
             given_names=request.data.get("given_names"),
@@ -121,7 +121,7 @@ class CustomerDetailView(APIView):
 
         return Response(
             {
-                "id": customer.id,
+                "customer_id": customer.customer_id,
                 "given_names": customer.given_names,
                 "surnames": customer.surnames,
                 "full_name": customer.full_name,
@@ -130,7 +130,7 @@ class CustomerDetailView(APIView):
             }
         )
 
-    def delete(self, request, customer_id: int):
+    def delete(self, request, customer_id: str):
         command = DeleteCustomerCommand(customer_id=customer_id)
 
         try:

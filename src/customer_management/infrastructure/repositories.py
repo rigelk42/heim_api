@@ -24,7 +24,7 @@ class CustomerRepository:
         """
         return Customer.objects.all()
 
-    def get_by_id(self, customer_id: int) -> Customer | None:
+    def get_by_id(self, customer_id: str) -> Customer | None:
         """Retrieve a customer by ID.
 
         Args:
@@ -33,7 +33,7 @@ class CustomerRepository:
         Returns:
             The Customer if found, None otherwise.
         """
-        return Customer.objects.filter(id=customer_id).first()
+        return Customer.objects.filter(customer_id=customer_id).first()
 
     def get_by_email(self, email: str) -> Customer | None:
         """Retrieve a customer by email address.

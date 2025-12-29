@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
             name="Customer",
             fields=[
                 (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
+                    "customer_id",
+                    models.CharField(
+                        editable=False,
+                        max_length=14,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
                     ),
                 ),
                 ("given_names", models.CharField(max_length=32)),

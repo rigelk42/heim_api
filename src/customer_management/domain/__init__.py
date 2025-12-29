@@ -9,7 +9,7 @@ from .events import (
 )
 from .exceptions import CustomerAlreadyExists, CustomerNotFound
 from .models import Address, Customer
-from .value_objects import Email, PersonName, PhoneNumber
+from .value_objects import CustomerId, Email, PersonName, PhoneNumber
 
 __all__ = [
     # Models
@@ -19,6 +19,7 @@ __all__ = [
     "CustomerAlreadyExists",
     "CustomerNotFound",
     # Value Objects
+    "CustomerId",
     "Email",
     "PersonName",
     "PhoneNumber",

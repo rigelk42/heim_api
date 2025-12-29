@@ -38,7 +38,7 @@ class UpdateCustomerCommand:
         phone: New phone number (optional).
     """
 
-    customer_id: int
+    customer_id: str
     given_names: str | None = None
     surnames: str | None = None
     phone: str | None = None
@@ -55,7 +55,7 @@ class UpdateCustomerEmailCommand:
         email: The new email address.
     """
 
-    customer_id: int
+    customer_id: str
     email: str
 
 
@@ -67,7 +67,7 @@ class DeleteCustomerCommand:
         customer_id: The ID of the customer to delete.
     """
 
-    customer_id: int
+    customer_id: str
 
 
 @dataclass(frozen=True)
@@ -86,7 +86,7 @@ class AddCustomerAddressCommand:
         is_primary: Whether this is the primary address.
     """
 
-    customer_id: int
+    customer_id: str
     address_line_1: str
     city: str
     postal_code: str
@@ -106,5 +106,5 @@ class RemoveCustomerAddressCommand:
         address_id: The ID of the address to remove.
     """
 
-    customer_id: int
+    customer_id: str
     address_id: int

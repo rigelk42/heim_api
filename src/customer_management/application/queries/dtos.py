@@ -16,7 +16,7 @@ class GetCustomerQuery:
         customer_id: The ID of the customer to retrieve.
     """
 
-    customer_id: int
+    customer_id: str
 
 
 @dataclass(frozen=True)
@@ -51,4 +51,4 @@ class GetCustomerAddressesQuery:
         customer_id: The ID of the customer.
     """
 
-    customer_id: int
+    customer_id: str

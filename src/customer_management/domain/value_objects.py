@@ -6,6 +6,7 @@ rather than by an identity. They encapsulate validation and behavior.
 
 import re
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass(frozen=True)
@@ -92,3 +93,65 @@ class PersonName:
 
     def __str__(self) -> str:
         return self.full_name
+
+
+@dataclass(frozen=True)
+class CustomerId:
+    """Represents a unique customer identifier.
+
+    Format: C + YY + DDD + W + HH + MM + µµµ
+        - C: Fixed prefix
+        - YY: Last two digits of year
+        - DDD: Day of year (001-366)
+        - W: Day of week (A=Monday through G=Sunday)
+        - HH: Hour (00-23)
+        - MM: Minute (00-59)
+        - µµµ: Microseconds (first 3 digits)
+
+    Example: C25364F1435532 (2025, day 364, Friday, 14:35, microsecond 532)
+
+    Attributes:
+        value: The customer ID string.
+
+    Raises:
+        ValueError: If the customer ID format is invalid.
+    """
+
+    value: str
+
+    _PATTERN = re.compile(r"^C\d{2}\d{3}[A-G]\d{2}\d{2}\d{3}$")
+    _WEEKDAY_LETTERS = "ABCDEFG"  # Monday=A through Sunday=G
+
+    def __post_init__(self):
+        if not self._is_valid(self.value):
+            raise ValueError(f"Invalid customer ID format: {self.value}")
+
+    @classmethod
+    def _is_valid(cls, customer_id: str) -> bool:
+        return bool(cls._PATTERN.match(customer_id))
+
+    @classmethod
+    def generate(cls, timestamp: datetime | None = None) -> "CustomerId":
+        """Generate a new unique customer ID based on the current timestamp.
+
+        Args:
+            timestamp: Optional datetime to use. Defaults to current UTC time.
+
+        Returns:
+            A new CustomerId instance.
+        """
+        if timestamp is None:
+            timestamp = datetime.now()
+
+        year = timestamp.strftime("%y")
+        day_of_year = timestamp.strftime("%j")
+        weekday_letter = cls._WEEKDAY_LETTERS[timestamp.weekday()]
+        hour = timestamp.strftime("%H")
+        minute = timestamp.strftime("%M")
+        microsecond = str(timestamp.microsecond).zfill(6)[:3]
+
+        value = f"C{year}{day_of_year}{weekday_letter}{hour}{minute}{microsecond}"
+        return cls(value=value)
+
+    def __str__(self) -> str:
+        return self.value

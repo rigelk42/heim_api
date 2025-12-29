@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 
-from .value_objects import Email, PersonName, PhoneNumber
+from .value_objects import CustomerId, Email, PersonName, PhoneNumber
 
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager
@@ -17,9 +17,9 @@ class Customer(models.Model):
     All access to Address entities must go through Customer methods.
     """
 
-    id: int
     addresses: RelatedManager[Address]
 
+    customer_id = models.CharField(max_length=14, primary_key=True, editable=False)
     given_names = models.CharField(max_length=32)
     surnames = models.CharField(max_length=32)
     email = models.EmailField(unique=True)
@@ -63,6 +63,11 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.get_name().formal_name
+
+    def save(self, *args, **kwargs):
+        if not self.customer_id:
+            self.customer_id = CustomerId.generate().value
+        super().save(*args, **kwargs)
 
     # --- Aggregate Root: Address management ---
 

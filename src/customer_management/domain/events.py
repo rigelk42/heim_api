@@ -40,7 +40,7 @@ class CustomerCreated(DomainEvent):
         surnames: The customer's surnames.
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     email: str = ""
     given_names: str = ""
     surnames: str = ""
@@ -55,7 +55,7 @@ class CustomerUpdated(DomainEvent):
         changes: Dictionary of field names to new values.
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     changes: tuple[tuple[str, Any], ...] = ()
 
 
@@ -69,7 +69,7 @@ class CustomerEmailChanged(DomainEvent):
         new_email: The new email address.
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     old_email: str = ""
     new_email: str = ""
 
@@ -83,7 +83,7 @@ class CustomerDeleted(DomainEvent):
         email: The customer's email address (for reference).
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     email: str = ""
 
 
@@ -98,7 +98,7 @@ class CustomerAddressAdded(DomainEvent):
         is_primary: Whether this is the primary address.
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     address_id: int = 0
     address_type: str = ""
     is_primary: bool = False
@@ -113,5 +113,5 @@ class CustomerAddressRemoved(DomainEvent):
         address_id: The ID of the removed address.
     """
 
-    customer_id: int = 0
+    customer_id: str = ""
     address_id: int = 0

@@ -91,7 +91,7 @@ class CustomerCommandHandler:
 
         self.event_dispatcher.publish(
             CustomerCreated(
-                customer_id=customer.id,
+                customer_id=customer.customer_id,
                 email=customer.email,
                 given_names=customer.given_names,
                 surnames=customer.surnames,
@@ -142,7 +142,7 @@ class CustomerCommandHandler:
         if changes:
             self.event_dispatcher.publish(
                 CustomerUpdated(
-                    customer_id=customer.id,
+                    customer_id=customer.customer_id,
                     changes=tuple(changes),
                 )
             )
@@ -184,7 +184,7 @@ class CustomerCommandHandler:
 
         self.event_dispatcher.publish(
             CustomerEmailChanged(
-                customer_id=customer.id,
+                customer_id=customer.customer_id,
                 old_email=old_email,
                 new_email=customer.email,
             )
@@ -207,14 +207,14 @@ class CustomerCommandHandler:
         if not customer:
             raise CustomerNotFound(command.customer_id)
 
-        customer_id = customer.id
+        cust_id = customer.customer_id
         email = customer.email
 
         self.repository.delete(customer)
 
         self.event_dispatcher.publish(
             CustomerDeleted(
-                customer_id=customer_id,
+                customer_id=cust_id,
                 email=email,
             )
         )
@@ -250,7 +250,7 @@ class CustomerCommandHandler:
 
         self.event_dispatcher.publish(
             CustomerAddressAdded(
-                customer_id=customer.id,
+                customer_id=customer.customer_id,
                 address_id=address.id,
                 address_type=address.address_type,
                 is_primary=address.is_primary,
@@ -282,7 +282,7 @@ class CustomerCommandHandler:
         if removed:
             self.event_dispatcher.publish(
                 CustomerAddressRemoved(
-                    customer_id=customer.id,
+                    customer_id=customer.customer_id,
                     address_id=command.address_id,
                 )
             )
