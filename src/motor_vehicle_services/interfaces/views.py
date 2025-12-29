@@ -42,7 +42,14 @@ from motor_vehicle_services.domain.exceptions import (
 
 
 def _serialize_vehicle(vehicle) -> dict:
-    """Serialize a MotorVehicle to a dictionary."""
+    """Serialize a MotorVehicle to a dictionary.
+
+    Args:
+        vehicle: The MotorVehicle instance to serialize.
+
+    Returns:
+        A dictionary containing the vehicle's data.
+    """
     return {
         "id": vehicle.id,
         "vin": vehicle.vin,
@@ -254,7 +261,14 @@ class MotorVehiclesByOwnerView(APIView):
 
 
 def _serialize_transaction(transaction) -> dict:
-    """Serialize a Transaction to a dictionary."""
+    """Serialize a Transaction to a dictionary.
+
+    Args:
+        transaction: The Transaction instance to serialize.
+
+    Returns:
+        A dictionary containing the transaction's data.
+    """
     return {
         "id": transaction.id,
         "customer_id": transaction.customer_id,

@@ -17,6 +17,18 @@ class MotorVehicle(models.Model):
     """Aggregate Root for the Motor Vehicle bounded context.
 
     Represents a motor vehicle with its identifying information.
+
+    Attributes:
+        owner: The customer who owns this vehicle (optional).
+        vin: Vehicle Identification Number (17 characters, unique).
+        license_plate: License plate number.
+        license_plate_state: State/province that issued the license plate.
+        make: Vehicle manufacturer (e.g., Honda, Toyota).
+        model: Vehicle model name (e.g., Accord, Camry).
+        year: Model year.
+        mileage_km: Current mileage in kilometers.
+        created_at: Timestamp when the vehicle was registered.
+        updated_at: Timestamp when the vehicle was last updated.
     """
 
     id: int
@@ -127,8 +139,17 @@ class MotorVehicle(models.Model):
 class Transaction(models.Model):
     """Represents a transaction involving a customer and a vehicle.
 
-    Tracks financial transactions such as sales, services, or other
-    vehicle-related financial activities.
+    Tracks transactions such as renewals, transfers, and credential replacements.
+
+    Attributes:
+        customer: The customer involved in the transaction.
+        vehicle: The vehicle involved in the transaction.
+        transaction_type: Type of transaction (renew, transfer, renew_rdf,
+            transfer_rdf, duplicate_title, replacement_credentials).
+        transaction_date: The date of the transaction.
+        transaction_amount: The monetary amount of the transaction.
+        created_at: Timestamp when the transaction was created.
+        updated_at: Timestamp when the transaction was last updated.
     """
 
     id: int
@@ -167,4 +188,5 @@ class Transaction(models.Model):
         ordering = ["-transaction_date"]
 
     def __str__(self) -> str:
+        """Return a string representation of the transaction."""
         return f"Transaction {self.id} - {self.customer} - {self.vehicle}"
