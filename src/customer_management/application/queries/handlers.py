@@ -10,8 +10,8 @@ from customer_management.domain.exceptions import CustomerNotFound
 from customer_management.domain.models import Address, Customer
 from customer_management.infrastructure.repositories import CustomerRepository
 
-from .dtos import (GetCustomerAddressesQuery, GetCustomerQuery, ListCustomersQuery,
-                   SearchCustomersQuery)
+from .dtos import (GetCustomerAddressesQuery, GetCustomerQuery,
+                   ListCustomersQuery, SearchCustomersQuery)
 
 
 class CustomerQueryHandler:

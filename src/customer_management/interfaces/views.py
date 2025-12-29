@@ -2,11 +2,16 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from customer_management.application import (CreateCustomerCommand, CustomerCommandHandler,
-                                   CustomerQueryHandler, DeleteCustomerCommand,
-                                   GetCustomerQuery, ListCustomersQuery,
-                                   SearchCustomersQuery, UpdateCustomerCommand)
-from customer_management.domain.exceptions import CustomerAlreadyExists, CustomerNotFound
+from customer_management.application import (CreateCustomerCommand,
+                                             CustomerCommandHandler,
+                                             CustomerQueryHandler,
+                                             DeleteCustomerCommand,
+                                             GetCustomerQuery,
+                                             ListCustomersQuery,
+                                             SearchCustomersQuery,
+                                             UpdateCustomerCommand)
+from customer_management.domain.exceptions import (CustomerAlreadyExists,
+                                                   CustomerNotFound)
 
 
 class CustomerListCreateView(APIView):

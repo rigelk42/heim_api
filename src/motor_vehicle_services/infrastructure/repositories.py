@@ -4,9 +4,12 @@ Repositories abstract data access and provide a collection-like interface
 for working with domain entities. They hide the details of data persistence.
 """
 
+from datetime import date
+from decimal import Decimal
+
 from django.db.models import Q, QuerySet
 
-from motor_vehicle_services.domain.models import MotorVehicle
+from motor_vehicle_services.domain.models import MotorVehicle, Transaction
 
 
 class MotorVehicleRepository:
@@ -177,3 +180,107 @@ class MotorVehicleRepository:
             vehicle: The vehicle to delete.
         """
         vehicle.delete()
+
+
+class TransactionRepository:
+    """Repository for Transaction entity persistence.
+
+    Provides methods for storing, retrieving, and querying Transaction entities.
+    This implementation uses Django's ORM for data access.
+    """
+
+    def get_all(self) -> QuerySet[Transaction]:
+        """Retrieve all transactions.
+
+        Returns:
+            A QuerySet of all transactions, ordered by transaction date (desc).
+        """
+        return Transaction.objects.all()
+
+    def get_by_id(self, transaction_id: int) -> Transaction | None:
+        """Retrieve a transaction by ID.
+
+        Args:
+            transaction_id: The ID of the transaction to retrieve.
+
+        Returns:
+            The Transaction if found, None otherwise.
+        """
+        return Transaction.objects.filter(id=transaction_id).first()
+
+    def get_by_customer(self, customer_id: int) -> QuerySet[Transaction]:
+        """Retrieve all transactions for a specific customer.
+
+        Args:
+            customer_id: The ID of the customer.
+
+        Returns:
+            A QuerySet of transactions for this customer.
+        """
+        return Transaction.objects.filter(customer_id=customer_id)
+
+    def get_by_vehicle(self, vehicle_id: int) -> QuerySet[Transaction]:
+        """Retrieve all transactions for a specific vehicle.
+
+        Args:
+            vehicle_id: The ID of the vehicle.
+
+        Returns:
+            A QuerySet of transactions for this vehicle.
+        """
+        return Transaction.objects.filter(vehicle_id=vehicle_id)
+
+    def save(self, transaction: Transaction) -> Transaction:
+        """Save an existing transaction.
+
+        Args:
+            transaction: The transaction to save.
+
+        Returns:
+            The saved Transaction.
+
+        Raises:
+            ValidationError: If the transaction data is invalid.
+        """
+        transaction.full_clean()
+        transaction.save()
+        return transaction
+
+    def create(
+        self,
+        customer_id: int,
+        vehicle_id: int,
+        transaction_date: date,
+        transaction_amount: Decimal,
+    ) -> Transaction:
+        """Create a new transaction.
+
+        Args:
+            customer_id: The ID of the customer.
+            vehicle_id: The ID of the vehicle.
+            transaction_date: The date of the transaction.
+            transaction_amount: The transaction amount.
+
+        Returns:
+            The newly created Transaction.
+
+        Raises:
+            ValidationError: If the transaction data is invalid.
+        """
+        transaction = Transaction(
+            customer_id=customer_id,
+            vehicle_id=vehicle_id,
+            transaction_date=transaction_date,
+            transaction_amount=transaction_amount,
+        )
+        transaction.full_clean()
+        transaction.save()
+        return transaction
+
+    def delete(self, transaction: Transaction) -> None:
+        """Delete a transaction.
+
+        Args:
+            transaction: The transaction to delete.
+        """
+        transaction.delete()

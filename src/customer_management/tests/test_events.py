@@ -1,12 +1,16 @@
 from django.test import TestCase
 
-from customer_management.application import (AddCustomerAddressCommand, CreateCustomerCommand,
-                                   CustomerCommandHandler, DeleteCustomerCommand,
-                                   RemoveCustomerAddressCommand, UpdateCustomerCommand,
-                                   UpdateCustomerEmailCommand)
-from customer_management.domain import (CustomerAddressAdded, CustomerAddressRemoved,
-                              CustomerCreated, CustomerDeleted, CustomerEmailChanged,
-                              CustomerUpdated)
+from customer_management.application import (AddCustomerAddressCommand,
+                                             CreateCustomerCommand,
+                                             CustomerCommandHandler,
+                                             DeleteCustomerCommand,
+                                             RemoveCustomerAddressCommand,
+                                             UpdateCustomerCommand,
+                                             UpdateCustomerEmailCommand)
+from customer_management.domain import (CustomerAddressAdded,
+                                        CustomerAddressRemoved,
+                                        CustomerCreated, CustomerDeleted,
+                                        CustomerEmailChanged, CustomerUpdated)
 from customer_management.infrastructure import EventDispatcher
 
 

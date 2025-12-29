@@ -174,3 +174,37 @@ class MotorVehicle(models.Model):
     def reactivate(self) -> None:
         """Reactivate the vehicle (e.g., recovered from theft)."""
         self.status = "active"
+
+
+class Transaction(models.Model):
+    """Represents a transaction involving a customer and a vehicle.
+
+    Tracks financial transactions such as sales, services, or other
+    vehicle-related financial activities.
+    """
+
+    id: int
+
+    customer = models.ForeignKey(
+        "customer_management.Customer",
+        on_delete=models.PROTECT,
+        related_name="transactions",
+    )
+    vehicle = models.ForeignKey(
+        MotorVehicle,
+        on_delete=models.PROTECT,
+        related_name="transactions",
+    )
+    transaction_date = models.DateField()
+    transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = "motor_vehicle_services"
+        db_table = "motor_vehicle_transactions"
+        ordering = ["-transaction_date"]
+
+    def __str__(self) -> str:
+        return f"Transaction {self.id} - {self.customer} - {self.vehicle}"

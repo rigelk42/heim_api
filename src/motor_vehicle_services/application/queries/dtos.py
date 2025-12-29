@@ -73,3 +73,46 @@ class ListMotorVehiclesByOwnerQuery:
     """
 
     owner_id: int
+
+
+@dataclass(frozen=True)
+class GetTransactionQuery:
+    """Query to retrieve a single transaction by ID.
+
+    Attributes:
+        transaction_id: The ID of the transaction to retrieve.
+    """
+
+    transaction_id: int
+
+
+@dataclass(frozen=True)
+class ListTransactionsQuery:
+    """Query to list all transactions.
+
+    Returns transactions ordered by transaction date (desc).
+    """
+
+    pass
+
+
+@dataclass(frozen=True)
+class ListTransactionsByCustomerQuery:
+    """Query to list all transactions for a specific customer.
+
+    Attributes:
+        customer_id: The ID of the customer.
+    """
+
+    customer_id: int
+
+
+@dataclass(frozen=True)
+class ListTransactionsByVehicleQuery:
+    """Query to list all transactions for a specific vehicle.
+
+    Attributes:
+        vehicle_id: The ID of the vehicle.
+    """
+
+    vehicle_id: int

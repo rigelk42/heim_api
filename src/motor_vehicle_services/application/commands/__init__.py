@@ -5,9 +5,11 @@ This module exports command DTOs and their handlers.
 """
 
 from .dtos import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-                   DeleteMotorVehicleCommand, TransferOwnershipCommand,
-                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand)
-from .handlers import MotorVehicleCommandHandler
+                   CreateTransactionCommand, DeleteMotorVehicleCommand,
+                   DeleteTransactionCommand, TransferOwnershipCommand,
+                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand,
+                   UpdateTransactionCommand)
+from .handlers import MotorVehicleCommandHandler, TransactionCommandHandler
 
 __all__ = [
     "CreateMotorVehicleCommand",
@@ -17,4 +19,8 @@ __all__ = [
     "DeleteMotorVehicleCommand",
     "TransferOwnershipCommand",
     "MotorVehicleCommandHandler",
+    "CreateTransactionCommand",
+    "UpdateTransactionCommand",
+    "DeleteTransactionCommand",
+    "TransactionCommandHandler",
 ]

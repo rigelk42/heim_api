@@ -6,6 +6,8 @@ needed to perform a write operation.
 """
 
 from dataclasses import dataclass
+from datetime import date
+from decimal import Decimal
 
 
 @dataclass(frozen=True)
@@ -114,3 +116,48 @@ class TransferOwnershipCommand:
 
     vehicle_id: int
     new_owner_id: int | None = None
+
+
+@dataclass(frozen=True)
+class CreateTransactionCommand:
+    """Command to create a new transaction.
+
+    Attributes:
+        customer_id: The ID of the customer.
+        vehicle_id: The ID of the vehicle.
+        transaction_date: The date of the transaction.
+        transaction_amount: The transaction amount.
+    """
+
+    customer_id: int
+    vehicle_id: int
+    transaction_date: date
+    transaction_amount: Decimal
+
+
+@dataclass(frozen=True)
+class UpdateTransactionCommand:
+    """Command to update an existing transaction.
+
+    Only non-None fields will be updated.
+
+    Attributes:
+        transaction_id: The ID of the transaction to update.
+        transaction_date: New transaction date (optional).
+        transaction_amount: New transaction amount (optional).
+    """
+
+    transaction_id: int
+    transaction_date: date | None = None
+    transaction_amount: Decimal | None = None
+
+
+@dataclass(frozen=True)
+class DeleteTransactionCommand:
+    """Command to delete a transaction.
+
+    Attributes:
+        transaction_id: The ID of the transaction to delete.
+    """
+
+    transaction_id: int

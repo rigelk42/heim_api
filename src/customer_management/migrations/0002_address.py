@@ -7,29 +7,56 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('customer_management', '0001_initial'),
+        ("customer_management", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Address',
+            name="Address",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('address_line_1', models.CharField(max_length=128)),
-                ('address_line_2', models.CharField(blank=True, max_length=128)),
-                ('city', models.CharField(max_length=64)),
-                ('state_province', models.CharField(blank=True, max_length=64)),
-                ('postal_code', models.CharField(max_length=16)),
-                ('country', models.CharField(max_length=64)),
-                ('address_type', models.CharField(choices=[('home', 'Home'), ('work', 'Work'), ('billing', 'Billing'), ('shipping', 'Shipping')], default='home', max_length=16)),
-                ('is_primary', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='addresses', to='customer_management.customer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("address_line_1", models.CharField(max_length=128)),
+                ("address_line_2", models.CharField(blank=True, max_length=128)),
+                ("city", models.CharField(max_length=64)),
+                ("state_province", models.CharField(blank=True, max_length=64)),
+                ("postal_code", models.CharField(max_length=16)),
+                ("country", models.CharField(max_length=64)),
+                (
+                    "address_type",
+                    models.CharField(
+                        choices=[
+                            ("home", "Home"),
+                            ("work", "Work"),
+                            ("billing", "Billing"),
+                            ("shipping", "Shipping"),
+                        ],
+                        default="home",
+                        max_length=16,
+                    ),
+                ),
+                ("is_primary", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "customer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="addresses",
+                        to="customer_management.customer",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'addresses',
-                'db_table': 'customers_address',
+                "verbose_name_plural": "addresses",
+                "db_table": "customers_address",
             },
         ),
     ]

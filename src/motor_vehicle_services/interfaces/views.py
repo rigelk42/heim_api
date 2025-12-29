@@ -4,26 +4,27 @@ Views handle HTTP requests and responses, translating between
 the external API format and the application layer commands/queries.
 """
 
+from datetime import datetime
+from decimal import Decimal
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from motor_vehicle_services.application import (ChangeMotorVehicleStatusCommand,
-                                                CreateMotorVehicleCommand,
-                                                DeleteMotorVehicleCommand,
-                                                GetMotorVehicleByVINQuery,
-                                                GetMotorVehicleQuery,
-                                                ListMotorVehiclesByOwnerQuery,
-                                                ListMotorVehiclesByStatusQuery,
-                                                ListMotorVehiclesQuery,
-                                                MotorVehicleCommandHandler,
-                                                MotorVehicleQueryHandler,
-                                                SearchMotorVehiclesQuery,
-                                                TransferOwnershipCommand,
-                                                UpdateMotorVehicleCommand,
-                                                UpdateMotorVehicleMileageCommand)
-from motor_vehicle_services.domain.exceptions import (MotorVehicleAlreadyExists,
-                                                      MotorVehicleNotFound)
+from motor_vehicle_services.application import (
+    ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
+    CreateTransactionCommand, DeleteMotorVehicleCommand,
+    DeleteTransactionCommand, GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
+    GetTransactionQuery, ListMotorVehiclesByOwnerQuery,
+    ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
+    ListTransactionsByCustomerQuery, ListTransactionsByVehicleQuery,
+    ListTransactionsQuery, MotorVehicleCommandHandler,
+    MotorVehicleQueryHandler, SearchMotorVehiclesQuery,
+    TransactionCommandHandler, TransactionQueryHandler,
+    TransferOwnershipCommand, UpdateMotorVehicleCommand,
+    UpdateMotorVehicleMileageCommand, UpdateTransactionCommand)
+from motor_vehicle_services.domain.exceptions import (
+    MotorVehicleAlreadyExists, MotorVehicleNotFound, TransactionNotFound)
 
 
 def _serialize_vehicle(vehicle) -> dict:
@@ -284,4 +285,180 @@ class MotorVehiclesByOwnerView(APIView):
         query = ListMotorVehiclesByOwnerQuery(owner_id=owner_id)
         vehicles = self.query_handler.handle_list_by_owner(query)
         data = [_serialize_vehicle(v) for v in vehicles]
+        return Response(data)
+
+
+def _serialize_transaction(transaction) -> dict:
+    """Serialize a Transaction to a dictionary."""
+    return {
+        "id": transaction.id,
+        "customer_id": transaction.customer_id,
+        "customer_name": (
+            transaction.customer.full_name if transaction.customer else None
+        ),
+        "vehicle_id": transaction.vehicle_id,
+        "vehicle_name": transaction.vehicle.full_name if transaction.vehicle else None,
+        "transaction_date": transaction.transaction_date.isoformat(),
+        "transaction_amount": str(transaction.transaction_amount),
+        "created_at": transaction.created_at.isoformat(),
+        "updated_at": transaction.updated_at.isoformat(),
+    }
+
+
+class TransactionListCreateView(APIView):
+    """View for listing and creating transactions."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.command_handler = TransactionCommandHandler()
+        self.query_handler = TransactionQueryHandler()
+
+    def get(self, request):
+        """List all transactions."""
+        query = ListTransactionsQuery()
+        transactions = self.query_handler.handle_list(query)
+        data = [_serialize_transaction(t) for t in transactions]
+        return Response(data)
+
+    def post(self, request):
+        """Create a new transaction."""
+        try:
+            transaction_date = datetime.strptime(
+                request.data.get("transaction_date", ""), "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            return Response(
+                {"error": "Invalid transaction_date format. Use YYYY-MM-DD."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            transaction_amount = Decimal(str(request.data.get("transaction_amount", 0)))
+        except (ValueError, TypeError):
+            return Response(
+                {"error": "Invalid transaction_amount."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        command = CreateTransactionCommand(
+            customer_id=request.data.get("customer_id", 0),
+            vehicle_id=request.data.get("vehicle_id", 0),
+            transaction_date=transaction_date,
+            transaction_amount=transaction_amount,
+        )
+
+        try:
+            transaction = self.command_handler.handle_create(command)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(
+            _serialize_transaction(transaction), status=status.HTTP_201_CREATED
+        )
+
+
+class TransactionDetailView(APIView):
+    """View for retrieving, updating, and deleting a transaction."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.command_handler = TransactionCommandHandler()
+        self.query_handler = TransactionQueryHandler()
+
+    def get(self, request, transaction_id: int):
+        """Retrieve a transaction by ID."""
+        query = GetTransactionQuery(transaction_id=transaction_id)
+
+        try:
+            transaction = self.query_handler.handle_get(query)
+        except TransactionNotFound:
+            return Response(
+                {"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response(_serialize_transaction(transaction))
+
+    def patch(self, request, transaction_id: int):
+        """Update a transaction."""
+        transaction_date = None
+        transaction_amount = None
+
+        if "transaction_date" in request.data:
+            try:
+                transaction_date = datetime.strptime(
+                    request.data.get("transaction_date"), "%Y-%m-%d"
+                ).date()
+            except ValueError:
+                return Response(
+                    {"error": "Invalid transaction_date format. Use YYYY-MM-DD."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        if "transaction_amount" in request.data:
+            try:
+                transaction_amount = Decimal(
+                    str(request.data.get("transaction_amount"))
+                )
+            except (ValueError, TypeError):
+                return Response(
+                    {"error": "Invalid transaction_amount."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        command = UpdateTransactionCommand(
+            transaction_id=transaction_id,
+            transaction_date=transaction_date,
+            transaction_amount=transaction_amount,
+        )
+
+        try:
+            transaction = self.command_handler.handle_update(command)
+        except TransactionNotFound:
+            return Response(
+                {"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response(_serialize_transaction(transaction))
+
+    def delete(self, request, transaction_id: int):
+        """Delete a transaction."""
+        command = DeleteTransactionCommand(transaction_id=transaction_id)
+
+        try:
+            self.command_handler.handle_delete(command)
+        except TransactionNotFound:
+            return Response(
+                {"error": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TransactionsByCustomerView(APIView):
+    """View for listing transactions by customer."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.query_handler = TransactionQueryHandler()
+
+    def get(self, request, customer_id: int):
+        """List all transactions for a customer."""
+        query = ListTransactionsByCustomerQuery(customer_id=customer_id)
+        transactions = self.query_handler.handle_list_by_customer(query)
+        data = [_serialize_transaction(t) for t in transactions]
+        return Response(data)
+
+
+class TransactionsByVehicleView(APIView):
+    """View for listing transactions by vehicle."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.query_handler = TransactionQueryHandler()
+
+    def get(self, request, vehicle_id: int):
+        """List all transactions for a vehicle."""
+        query = ListTransactionsByVehicleQuery(vehicle_id=vehicle_id)
+        transactions = self.query_handler.handle_list_by_vehicle(query)
+        data = [_serialize_transaction(t) for t in transactions]
         return Response(data)

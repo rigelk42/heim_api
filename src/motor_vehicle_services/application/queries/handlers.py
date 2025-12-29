@@ -6,13 +6,18 @@ They provide read-only access to the domain.
 
 from django.db.models import QuerySet
 
-from motor_vehicle_services.domain.exceptions import MotorVehicleNotFound
-from motor_vehicle_services.domain.models import MotorVehicle
-from motor_vehicle_services.infrastructure.repositories import MotorVehicleRepository
+from motor_vehicle_services.domain.exceptions import (MotorVehicleNotFound,
+                                                      TransactionNotFound)
+from motor_vehicle_services.domain.models import MotorVehicle, Transaction
+from motor_vehicle_services.infrastructure.repositories import (
+    MotorVehicleRepository, TransactionRepository)
 
 from .dtos import (GetMotorVehicleByVINQuery, GetMotorVehicleQuery,
-                   ListMotorVehiclesByOwnerQuery, ListMotorVehiclesByStatusQuery,
-                   ListMotorVehiclesQuery, SearchMotorVehiclesQuery)
+                   GetTransactionQuery, ListMotorVehiclesByOwnerQuery,
+                   ListMotorVehiclesByStatusQuery, ListMotorVehiclesQuery,
+                   ListTransactionsByCustomerQuery,
+                   ListTransactionsByVehicleQuery, ListTransactionsQuery,
+                   SearchMotorVehiclesQuery)
 
 
 class MotorVehicleQueryHandler:
@@ -115,3 +120,77 @@ class MotorVehicleQueryHandler:
             A QuerySet of vehicles owned by the specified customer.
         """
         return self.repository.get_by_owner(query.owner_id)
+
+
+class TransactionQueryHandler:
+    """Handles all transaction-related queries.
+
+    This handler processes read operations for the Transaction entity,
+    providing access to transaction data without modifying state.
+
+    Attributes:
+        repository: The repository used for data access.
+    """
+
+    def __init__(self, repository: TransactionRepository | None = None):
+        """Initialize the query handler.
+
+        Args:
+            repository: Optional repository instance. If not provided,
+                a new TransactionRepository will be created.
+        """
+        self.repository = repository or TransactionRepository()
+
+    def handle_get(self, query: GetTransactionQuery) -> Transaction:
+        """Retrieve a single transaction by ID.
+
+        Args:
+            query: The get transaction query.
+
+        Returns:
+            The requested Transaction.
+
+        Raises:
+            TransactionNotFound: If the transaction does not exist.
+        """
+        transaction = self.repository.get_by_id(query.transaction_id)
+        if not transaction:
+            raise TransactionNotFound(query.transaction_id)
+        return transaction
+
+    def handle_list(self, query: ListTransactionsQuery) -> QuerySet[Transaction]:
+        """List all transactions.
+
+        Args:
+            query: The list transactions query.
+
+        Returns:
+            A QuerySet of all transactions.
+        """
+        return self.repository.get_all()
+
+    def handle_list_by_customer(
+        self, query: ListTransactionsByCustomerQuery
+    ) -> QuerySet[Transaction]:
+        """List transactions by customer.
+
+        Args:
+            query: The list by customer query.
+
+        Returns:
+            A QuerySet of transactions for the specified customer.
+        """
+        return self.repository.get_by_customer(query.customer_id)
+
+    def handle_list_by_vehicle(
+        self, query: ListTransactionsByVehicleQuery
+    ) -> QuerySet[Transaction]:
+        """List transactions by vehicle.
+
+        Args:
+            query: The list by vehicle query.
+
+        Returns:
+            A QuerySet of transactions for the specified vehicle.
+        """
+        return self.repository.get_by_vehicle(query.vehicle_id)

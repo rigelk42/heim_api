@@ -11,16 +11,20 @@ from motor_vehicle_services.domain.events import (MotorVehicleCreated,
                                                   MotorVehicleOwnerChanged,
                                                   MotorVehicleStatusChanged,
                                                   MotorVehicleUpdated)
-from motor_vehicle_services.domain.exceptions import (MotorVehicleAlreadyExists,
-                                                      MotorVehicleNotFound)
-from motor_vehicle_services.domain.models import MotorVehicle
+from motor_vehicle_services.domain.exceptions import (
+    MotorVehicleAlreadyExists, MotorVehicleNotFound, TransactionNotFound)
+from motor_vehicle_services.domain.models import MotorVehicle, Transaction
 from motor_vehicle_services.domain.value_objects import VIN
-from motor_vehicle_services.infrastructure.event_dispatcher import EventDispatcher
-from motor_vehicle_services.infrastructure.repositories import MotorVehicleRepository
+from motor_vehicle_services.infrastructure.event_dispatcher import \
+    EventDispatcher
+from motor_vehicle_services.infrastructure.repositories import (
+    MotorVehicleRepository, TransactionRepository)
 
 from .dtos import (ChangeMotorVehicleStatusCommand, CreateMotorVehicleCommand,
-                   DeleteMotorVehicleCommand, TransferOwnershipCommand,
-                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand)
+                   CreateTransactionCommand, DeleteMotorVehicleCommand,
+                   DeleteTransactionCommand, TransferOwnershipCommand,
+                   UpdateMotorVehicleCommand, UpdateMotorVehicleMileageCommand,
+                   UpdateTransactionCommand)
 
 
 class MotorVehicleCommandHandler:
@@ -312,3 +316,95 @@ class MotorVehicleCommandHandler:
             )
 
         return vehicle
+
+
+class TransactionCommandHandler:
+    """Handles all transaction-related commands.
+
+    This handler processes write operations for the Transaction entity,
+    including creating, updating, and deleting transactions.
+
+    Attributes:
+        repository: The repository used for data persistence.
+    """
+
+    def __init__(self, repository: TransactionRepository | None = None):
+        """Initialize the command handler.
+
+        Args:
+            repository: Optional repository instance. If not provided,
+                a new TransactionRepository will be created.
+        """
+        self.repository = repository or TransactionRepository()
+
+    def handle_create(self, command: CreateTransactionCommand) -> Transaction:
+        """Create a new transaction.
+
+        Args:
+            command: The create transaction command.
+
+        Returns:
+            The newly created Transaction.
+
+        Raises:
+            ValueError: If the customer or vehicle does not exist.
+        """
+        from customer_management.domain.models import Customer
+
+        customer = Customer.objects.filter(id=command.customer_id).first()
+        if not customer:
+            raise ValueError(f"Customer with ID {command.customer_id} not found")
+
+        vehicle = MotorVehicle.objects.filter(id=command.vehicle_id).first()
+        if not vehicle:
+            raise ValueError(f"Vehicle with ID {command.vehicle_id} not found")
+
+        transaction = self.repository.create(
+            customer_id=command.customer_id,
+            vehicle_id=command.vehicle_id,
+            transaction_date=command.transaction_date,
+            transaction_amount=command.transaction_amount,
+        )
+
+        return transaction
+
+    def handle_update(self, command: UpdateTransactionCommand) -> Transaction:
+        """Update an existing transaction.
+
+        Args:
+            command: The update transaction command.
+
+        Returns:
+            The updated Transaction.
+
+        Raises:
+            TransactionNotFound: If the transaction does not exist.
+        """
+        transaction = self.repository.get_by_id(command.transaction_id)
+        if not transaction:
+            raise TransactionNotFound(command.transaction_id)
+
+        if command.transaction_date is not None:
+            transaction.transaction_date = command.transaction_date
+
+        if command.transaction_amount is not None:
+            transaction.transaction_amount = command.transaction_amount
+
+        transaction = self.repository.save(transaction)
+
+        return transaction
+
+    def handle_delete(self, command: DeleteTransactionCommand) -> None:
+        """Delete a transaction.
+
+        Args:
+            command: The delete transaction command.
+
+        Raises:
+            TransactionNotFound: If the transaction does not exist.
+        """
+        transaction = self.repository.get_by_id(command.transaction_id)
+        if not transaction:
+            raise TransactionNotFound(command.transaction_id)
+
+        self.repository.delete(transaction)
