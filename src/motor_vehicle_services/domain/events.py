@@ -77,21 +77,6 @@ class MotorVehicleMileageUpdated(DomainEvent):
 
 
 @dataclass(frozen=True)
-class MotorVehicleStatusChanged(DomainEvent):
-    """Event raised when a vehicle's status changes.
-
-    Attributes:
-        vehicle_id: The ID of the vehicle.
-        old_status: The previous status.
-        new_status: The new status.
-    """
-
-    vehicle_id: int = 0
-    old_status: str = ""
-    new_status: str = ""
-
-
-@dataclass(frozen=True)
 class MotorVehicleOwnerChanged(DomainEvent):
     """Event raised when a vehicle's owner changes.
 

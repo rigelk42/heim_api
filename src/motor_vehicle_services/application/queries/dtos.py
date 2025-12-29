@@ -41,17 +41,6 @@ class ListMotorVehiclesQuery:
 
 
 @dataclass(frozen=True)
-class ListMotorVehiclesByStatusQuery:
-    """Query to list motor vehicles by status.
-
-    Attributes:
-        status: The status to filter by (active, sold, scrapped, stolen).
-    """
-
-    status: str
-
-
-@dataclass(frozen=True)
 class SearchMotorVehiclesQuery:
     """Query to search motor vehicles by VIN, make, model, or license plate.
 

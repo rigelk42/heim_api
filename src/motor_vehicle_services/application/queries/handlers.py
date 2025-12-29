@@ -21,7 +21,6 @@ from .dtos import (
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
-    ListMotorVehiclesByStatusQuery,
     ListMotorVehiclesQuery,
     ListTransactionsByCustomerQuery,
     ListTransactionsByVehicleQuery,
@@ -93,19 +92,6 @@ class MotorVehicleQueryHandler:
             A QuerySet of all vehicles.
         """
         return self.repository.get_all()
-
-    def handle_list_by_status(
-        self, query: ListMotorVehiclesByStatusQuery
-    ) -> QuerySet[MotorVehicle]:
-        """List motor vehicles by status.
-
-        Args:
-            query: The list by status query.
-
-        Returns:
-            A QuerySet of vehicles with the specified status.
-        """
-        return self.repository.get_by_status(query.status)
 
     def handle_search(self, query: SearchMotorVehiclesQuery) -> QuerySet[MotorVehicle]:
         """Search motor vehicles by VIN, make, model, or license plate.

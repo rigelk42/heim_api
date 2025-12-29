@@ -11,7 +11,6 @@ from .views import (
     MotorVehicleDetailView,
     MotorVehicleListCreateView,
     MotorVehicleMileageView,
-    MotorVehicleStatusView,
 )
 
 __all__ = [
@@ -19,5 +18,4 @@ __all__ = [
     "MotorVehicleDetailView",
     "MotorVehicleByVINView",
     "MotorVehicleMileageView",
-    "MotorVehicleStatusView",
 ]

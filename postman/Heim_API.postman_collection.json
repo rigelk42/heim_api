@@ -145,24 +145,6 @@
 					}
 				},
 				{
-					"name": "List Vehicles by Status",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{vehicles_url}}?status={{vehicle_status}}",
-							"host": ["{{vehicles_url}}"],
-							"query": [
-								{
-									"key": "status",
-									"value": "{{vehicle_status}}"
-								}
-							]
-						},
-						"description": "List vehicles by status (active, sold, scrapped, stolen)"
-					}
-				},
-				{
 					"name": "Create Vehicle",
 					"request": {
 						"method": "POST",
@@ -174,7 +156,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"color\": \"Blue\",\n    \"fuel_type\": \"petrol\",\n    \"transmission\": \"automatic\",\n    \"engine_capacity_cc\": 2000,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\",\n    \"owner_id\": null\n}"
+							"raw": "{\n    \"vin\": \"1HGCM82633A004352\",\n    \"make\": \"Honda\",\n    \"model\": \"Accord\",\n    \"year\": 2020,\n    \"mileage_km\": 50000,\n    \"license_plate\": \"ABC123\",\n    \"license_plate_state\": \"CA\",\n    \"owner_id\": null\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}",
@@ -221,14 +203,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"color\": \"Red\",\n    \"license_plate\": \"XYZ789\",\n    \"license_plate_state\": \"NY\"\n}"
+							"raw": "{\n    \"license_plate\": \"XYZ789\",\n    \"license_plate_state\": \"NY\"\n}"
 						},
 						"url": {
 							"raw": "{{vehicles_url}}/{{vehicle_id}}/",
 							"host": ["{{vehicles_url}}"],
 							"path": ["{{vehicle_id}}", ""]
 						},
-						"description": "Update a vehicle's details"
+						"description": "Update a vehicle's license plate details"
 					}
 				},
 				{
@@ -251,28 +233,6 @@
 							"path": ["{{vehicle_id}}", "mileage", ""]
 						},
 						"description": "Update a vehicle's mileage"
-					}
-				},
-				{
-					"name": "Change Vehicle Status",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"status\": \"sold\"\n}"
-						},
-						"url": {
-							"raw": "{{vehicles_url}}/{{vehicle_id}}/status/",
-							"host": ["{{vehicles_url}}"],
-							"path": ["{{vehicle_id}}", "status", ""]
-						},
-						"description": "Change a vehicle's status (active, sold, scrapped, stolen)"
 					}
 				},
 				{
@@ -347,6 +307,121 @@
 				}
 			],
 			"description": "Motor vehicle service endpoints"
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "List Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", ""]
+						},
+						"description": "List all transactions"
+					}
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": 1,\n    \"vehicle_id\": 1,\n    \"transaction_date\": \"2024-01-15\",\n    \"transaction_amount\": \"25000.00\"\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", ""]
+						},
+						"description": "Create a new transaction"
+					}
+				},
+				{
+					"name": "Get Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/{{transaction_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", "{{transaction_id}}", ""]
+						},
+						"description": "Get a transaction by ID"
+					}
+				},
+				{
+					"name": "Update Transaction",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_amount\": \"27500.00\"\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/{{transaction_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", "{{transaction_id}}", ""]
+						},
+						"description": "Update a transaction"
+					}
+				},
+				{
+					"name": "Delete Transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/{{transaction_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", "{{transaction_id}}", ""]
+						},
+						"description": "Delete a transaction"
+					}
+				},
+				{
+					"name": "List Transactions by Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/customer/{{customer_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", "customer", "{{customer_id}}", ""]
+						},
+						"description": "List all transactions for a specific customer"
+					}
+				},
+				{
+					"name": "List Transactions by Vehicle",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_url}}/transactions/vehicle/{{vehicle_id}}/",
+							"host": ["{{vehicles_url}}"],
+							"path": ["transactions", "vehicle", "{{vehicle_id}}", ""]
+						},
+						"description": "List all transactions for a specific vehicle"
+					}
+				}
+			],
+			"description": "Transaction endpoints"
 		}
 	],
 	"variable": [
@@ -367,8 +442,8 @@
 			"value": "Honda"
 		},
 		{
-			"key": "vehicle_status",
-			"value": "active"
+			"key": "transaction_id",
+			"value": "1"
 		}
 	]
 }

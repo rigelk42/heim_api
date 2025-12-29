@@ -60,17 +60,6 @@ class MotorVehicleRepository:
         """
         return MotorVehicle.objects.filter(license_plate=license_plate.upper()).first()
 
-    def get_by_status(self, status: str) -> QuerySet[MotorVehicle]:
-        """Retrieve all motor vehicles with a specific status.
-
-        Args:
-            status: The status to filter by (active, sold, scrapped, stolen).
-
-        Returns:
-            A QuerySet of matching vehicles.
-        """
-        return MotorVehicle.objects.filter(status=status)
-
     def get_by_owner(self, owner_id: int) -> QuerySet[MotorVehicle]:
         """Retrieve all motor vehicles owned by a specific customer.
 
@@ -124,10 +113,6 @@ class MotorVehicleRepository:
         make: str,
         model: str,
         year: int,
-        color: str = "",
-        fuel_type: str = "petrol",
-        transmission: str = "manual",
-        engine_capacity_cc: int | None = None,
         mileage_km: int = 0,
         license_plate: str = "",
         license_plate_state: str = "",
@@ -140,10 +125,6 @@ class MotorVehicleRepository:
             make: Vehicle manufacturer.
             model: Vehicle model name.
             year: Model year.
-            color: Vehicle color.
-            fuel_type: Fuel type.
-            transmission: Transmission type.
-            engine_capacity_cc: Engine capacity in cc.
             mileage_km: Current mileage in kilometers.
             license_plate: License plate number.
             license_plate_state: License plate issuing state.
@@ -160,10 +141,6 @@ class MotorVehicleRepository:
             make=make,
             model=model,
             year=year,
-            color=color,
-            fuel_type=fuel_type,
-            transmission=transmission,
-            engine_capacity_cc=engine_capacity_cc,
             mileage_km=mileage_km,
             license_plate=license_plate.upper() if license_plate else "",
             license_plate_state=license_plate_state,

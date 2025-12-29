@@ -12,25 +12,19 @@ class MotorVehicleAdmin(admin.ModelAdmin):
         "make",
         "model",
         "year",
-        "color",
         "license_plate",
-        "status",
         "mileage_km",
         "created_at",
     ]
-    list_filter = ["status", "fuel_type", "transmission", "make", "year"]
+    list_filter = ["make", "year"]
     search_fields = ["vin", "make", "model", "license_plate"]
     ordering = ["-year", "make", "model"]
     readonly_fields = ["created_at", "updated_at"]
 
     fieldsets = (
         ("Identification", {"fields": ("vin", "license_plate", "license_plate_state")}),
-        ("Vehicle Details", {"fields": ("make", "model", "year", "color")}),
-        (
-            "Specifications",
-            {"fields": ("fuel_type", "transmission", "engine_capacity_cc")},
-        ),
-        ("Status", {"fields": ("status", "mileage_km")}),
+        ("Vehicle Details", {"fields": ("make", "model", "year")}),
+        ("Mileage", {"fields": ("mileage_km",)}),
         (
             "Timestamps",
             {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},

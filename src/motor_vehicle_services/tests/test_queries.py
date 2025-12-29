@@ -8,7 +8,6 @@ from motor_vehicle_services.application import (
     GetMotorVehicleByVINQuery,
     GetMotorVehicleQuery,
     ListMotorVehiclesByOwnerQuery,
-    ListMotorVehiclesByStatusQuery,
     ListMotorVehiclesQuery,
     MotorVehicleCommandHandler,
     MotorVehicleQueryHandler,
@@ -144,67 +143,6 @@ class ListMotorVehiclesQueryTest(TestCase):
 
         self.assertEqual(result[0].year, 2022)
         self.assertEqual(result[1].year, 2018)
-
-
-class ListMotorVehiclesByStatusQueryTest(TestCase):
-    def setUp(self):
-        self.command_handler = MotorVehicleCommandHandler()
-        self.query_handler = MotorVehicleQueryHandler()
-
-        # Create vehicles with different statuses
-        self.command_handler.handle_create(
-            CreateMotorVehicleCommand(
-                vin="1HGCM82633A004352",
-                make="Honda",
-                model="Accord",
-                year=2020,
-            )
-        )
-        self.command_handler.handle_create(
-            CreateMotorVehicleCommand(
-                vin="2T1BURHE5JC123456",
-                make="Toyota",
-                model="Corolla",
-                year=2018,
-            )
-        )
-        self.command_handler.handle_create(
-            CreateMotorVehicleCommand(
-                vin="3VWDP7AJ5DM123456",
-                make="Volkswagen",
-                model="Jetta",
-                year=2019,
-            )
-        )
-
-    def test_list_by_status_active(self):
-        query = ListMotorVehiclesByStatusQuery(status="active")
-
-        result = self.query_handler.handle_list_by_status(query)
-
-        self.assertEqual(result.count(), 3)  # All are active by default
-
-    def test_list_by_status_sold(self):
-        # Mark one as sold
-        from motor_vehicle_services.application import ChangeMotorVehicleStatusCommand
-
-        vehicles = list(self.query_handler.handle_list(ListMotorVehiclesQuery()))
-        self.command_handler.handle_change_status(
-            ChangeMotorVehicleStatusCommand(vehicle_id=vehicles[0].id, status="sold")
-        )
-
-        query = ListMotorVehiclesByStatusQuery(status="sold")
-
-        result = self.query_handler.handle_list_by_status(query)
-
-        self.assertEqual(result.count(), 1)
-
-    def test_list_by_status_no_results(self):
-        query = ListMotorVehiclesByStatusQuery(status="stolen")
-
-        result = self.query_handler.handle_list_by_status(query)
-
-        self.assertEqual(result.count(), 0)
 
 
 class SearchMotorVehiclesQueryTest(TestCase):

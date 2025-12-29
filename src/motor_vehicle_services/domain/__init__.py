@@ -14,7 +14,6 @@ from .events import (
     MotorVehicleDeleted,
     MotorVehicleMileageUpdated,
     MotorVehicleOwnerChanged,
-    MotorVehicleStatusChanged,
     MotorVehicleUpdated,
 )
 from .exceptions import (
@@ -38,7 +37,6 @@ __all__ = [
     "MotorVehicleCreated",
     "MotorVehicleUpdated",
     "MotorVehicleMileageUpdated",
-    "MotorVehicleStatusChanged",
     "MotorVehicleOwnerChanged",
     "MotorVehicleDeleted",
     # Exceptions

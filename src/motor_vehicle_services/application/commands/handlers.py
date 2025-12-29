@@ -10,7 +10,6 @@ from motor_vehicle_services.domain.events import (
     MotorVehicleDeleted,
     MotorVehicleMileageUpdated,
     MotorVehicleOwnerChanged,
-    MotorVehicleStatusChanged,
     MotorVehicleUpdated,
 )
 from motor_vehicle_services.domain.exceptions import (
@@ -27,7 +26,6 @@ from motor_vehicle_services.infrastructure.repositories import (
 )
 
 from .dtos import (
-    ChangeMotorVehicleStatusCommand,
     CreateMotorVehicleCommand,
     CreateTransactionCommand,
     DeleteMotorVehicleCommand,
@@ -92,10 +90,6 @@ class MotorVehicleCommandHandler:
             make=command.make,
             model=command.model,
             year=command.year,
-            color=command.color,
-            fuel_type=command.fuel_type,
-            transmission=command.transmission,
-            engine_capacity_cc=command.engine_capacity_cc,
             mileage_km=command.mileage_km,
             license_plate=command.license_plate,
             license_plate_state=command.license_plate_state,
@@ -133,22 +127,6 @@ class MotorVehicleCommandHandler:
             raise MotorVehicleNotFound(command.vehicle_id)
 
         changes: list[tuple[str, str | int | None]] = []
-
-        if command.color is not None:
-            changes.append(("color", command.color))
-            vehicle.color = command.color
-
-        if command.fuel_type is not None:
-            changes.append(("fuel_type", command.fuel_type))
-            vehicle.fuel_type = command.fuel_type
-
-        if command.transmission is not None:
-            changes.append(("transmission", command.transmission))
-            vehicle.transmission = command.transmission
-
-        if command.engine_capacity_cc is not None:
-            changes.append(("engine_capacity_cc", command.engine_capacity_cc))
-            vehicle.engine_capacity_cc = command.engine_capacity_cc
 
         if command.license_plate is not None:
             changes.append(("license_plate", command.license_plate))
@@ -209,49 +187,6 @@ class MotorVehicleCommandHandler:
                 new_mileage_km=vehicle.mileage_km,
             )
         )
-
-        return vehicle
-
-    def handle_change_status(
-        self, command: ChangeMotorVehicleStatusCommand
-    ) -> MotorVehicle:
-        """Change a motor vehicle's status.
-
-        Publishes a MotorVehicleStatusChanged event on success.
-
-        Args:
-            command: The change status command.
-
-        Returns:
-            The updated MotorVehicle.
-
-        Raises:
-            MotorVehicleNotFound: If the vehicle does not exist.
-            ValueError: If the status is invalid.
-        """
-        vehicle = self.repository.get_by_id(command.vehicle_id)
-        if not vehicle:
-            raise MotorVehicleNotFound(command.vehicle_id)
-
-        valid_statuses = ["active", "sold", "scrapped", "stolen"]
-        if command.status not in valid_statuses:
-            raise ValueError(
-                f"Invalid status '{command.status}'. "
-                f"Must be one of: {', '.join(valid_statuses)}"
-            )
-
-        old_status = vehicle.status
-        vehicle.status = command.status
-        vehicle = self.repository.save(vehicle)
-
-        if old_status != command.status:
-            self.event_dispatcher.publish(
-                MotorVehicleStatusChanged(
-                    vehicle_id=vehicle.id,
-                    old_status=old_status,
-                    new_status=vehicle.status,
-                )
-            )
 
         return vehicle
 

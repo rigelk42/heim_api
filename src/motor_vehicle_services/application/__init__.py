@@ -8,7 +8,6 @@ Queries represent requests for data without side effects.
 """
 
 from .commands import (
-    ChangeMotorVehicleStatusCommand,
     CreateMotorVehicleCommand,
     CreateTransactionCommand,
     DeleteMotorVehicleCommand,
@@ -25,7 +24,6 @@ from .queries import (
     GetMotorVehicleQuery,
     GetTransactionQuery,
     ListMotorVehiclesByOwnerQuery,
-    ListMotorVehiclesByStatusQuery,
     ListMotorVehiclesQuery,
     ListTransactionsByCustomerQuery,
     ListTransactionsByVehicleQuery,
@@ -40,7 +38,6 @@ __all__ = [
     "CreateMotorVehicleCommand",
     "UpdateMotorVehicleCommand",
     "UpdateMotorVehicleMileageCommand",
-    "ChangeMotorVehicleStatusCommand",
     "DeleteMotorVehicleCommand",
     "TransferOwnershipCommand",
     "MotorVehicleCommandHandler",
@@ -48,7 +45,6 @@ __all__ = [
     "GetMotorVehicleQuery",
     "GetMotorVehicleByVINQuery",
     "ListMotorVehiclesQuery",
-    "ListMotorVehiclesByStatusQuery",
     "ListMotorVehiclesByOwnerQuery",
     "SearchMotorVehiclesQuery",
     "MotorVehicleQueryHandler",

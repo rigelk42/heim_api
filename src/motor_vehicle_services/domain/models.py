@@ -16,32 +16,10 @@ from .value_objects import VIN, LicensePlate, Mileage
 class MotorVehicle(models.Model):
     """Aggregate Root for the Motor Vehicle bounded context.
 
-    Represents a motor vehicle with its identifying information,
-    specifications, and current status.
+    Represents a motor vehicle with its identifying information.
     """
 
     id: int
-
-    FUEL_TYPES = [
-        ("petrol", "Petrol"),
-        ("diesel", "Diesel"),
-        ("electric", "Electric"),
-        ("hybrid", "Hybrid"),
-        ("lpg", "LPG"),
-    ]
-
-    TRANSMISSION_TYPES = [
-        ("manual", "Manual"),
-        ("automatic", "Automatic"),
-        ("cvt", "CVT"),
-    ]
-
-    STATUS_CHOICES = [
-        ("active", "Active"),
-        ("sold", "Sold"),
-        ("scrapped", "Scrapped"),
-        ("stolen", "Stolen"),
-    ]
 
     # Owner relationship
     owner = models.ForeignKey(
@@ -61,18 +39,9 @@ class MotorVehicle(models.Model):
     make = models.CharField(max_length=64)
     model = models.CharField(max_length=64)
     year = models.PositiveIntegerField()
-    color = models.CharField(max_length=32, blank=True)
-
-    # Specifications
-    fuel_type = models.CharField(max_length=16, choices=FUEL_TYPES, default="petrol")
-    transmission = models.CharField(
-        max_length=16, choices=TRANSMISSION_TYPES, default="manual"
-    )
-    engine_capacity_cc = models.PositiveIntegerField(null=True, blank=True)
 
     # Current state
     mileage_km = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default="active")
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -126,11 +95,6 @@ class MotorVehicle(models.Model):
         return f"{self.year} {self.make} {self.model}"
 
     @property
-    def is_active(self) -> bool:
-        """Check if the vehicle is currently active."""
-        return self.status == "active"
-
-    @property
     def owner_name(self) -> str | None:
         """Return the owner's full name if assigned."""
         if self.owner:
@@ -158,22 +122,6 @@ class MotorVehicle(models.Model):
                 f"current mileage ({self.mileage_km} km)"
             )
         self.mileage_km = new_km
-
-    def mark_as_sold(self) -> None:
-        """Mark the vehicle as sold."""
-        self.status = "sold"
-
-    def mark_as_scrapped(self) -> None:
-        """Mark the vehicle as scrapped."""
-        self.status = "scrapped"
-
-    def mark_as_stolen(self) -> None:
-        """Mark the vehicle as stolen."""
-        self.status = "stolen"
-
-    def reactivate(self) -> None:
-        """Reactivate the vehicle (e.g., recovered from theft)."""
-        self.status = "active"
 
 
 class Transaction(models.Model):

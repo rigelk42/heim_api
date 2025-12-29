@@ -16,11 +16,6 @@ urlpatterns = [
         name="mileage",
     ),
     path(
-        "<int:vehicle_id>/status/",
-        views.MotorVehicleStatusView.as_view(),
-        name="status",
-    ),
-    path(
         "<int:vehicle_id>/owner/",
         views.MotorVehicleOwnerView.as_view(),
         name="owner",
