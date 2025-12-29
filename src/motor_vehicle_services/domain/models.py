@@ -9,6 +9,7 @@ must go through the Aggregate Root.
 from __future__ import annotations
 
 import uuid
+from decimal import Decimal
 
 from django.db import models
 
@@ -118,6 +119,11 @@ class Transaction(models.Model):
             DUPTTL, RPLCRD, TNSFCLR, LNSL, NTRL).
         transaction_date: The date of the transaction.
         transaction_amount: The monetary amount of the transaction.
+        bz_partner_fee: BZ Partner fee amount.
+        broker_fee: Broker fee amount.
+        service_fee: Service fee amount.
+        dmv_fee: DMV fee amount.
+        discount: Discount amount.
         created_at: Timestamp when the transaction was created.
         updated_at: Timestamp when the transaction was last updated.
     """
@@ -154,6 +160,21 @@ class Transaction(models.Model):
     transaction_date = models.DateField()
     transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)
 
+    # Fee fields
+    bz_partner_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    broker_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    service_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+    dmv_fee = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"))
+    discount = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal("0")
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -161,6 +182,11 @@ class Transaction(models.Model):
         app_label = "motor_vehicle_services"
         db_table = "motor_vehicle_transactions"
         ordering = ["-transaction_date"]
+
+    @property
+    def total_fees(self):
+        """Return the sum of all fees."""
+        return self.bz_partner_fee + self.broker_fee + self.service_fee + self.dmv_fee
 
     def __str__(self) -> str:
         """Return a string representation of the transaction."""

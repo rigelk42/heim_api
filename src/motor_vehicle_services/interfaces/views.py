@@ -222,6 +222,12 @@ def _serialize_transaction(transaction) -> dict:
         "transaction_type": transaction.transaction_type,
         "transaction_date": transaction.transaction_date.isoformat(),
         "transaction_amount": str(transaction.transaction_amount),
+        "bz_partner_fee": str(transaction.bz_partner_fee),
+        "broker_fee": str(transaction.broker_fee),
+        "service_fee": str(transaction.service_fee),
+        "dmv_fee": str(transaction.dmv_fee),
+        "discount": str(transaction.discount),
+        "total_fees": str(transaction.total_fees),
         "created_at": transaction.created_at.isoformat(),
         "updated_at": transaction.updated_at.isoformat(),
     }

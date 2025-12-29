@@ -60,6 +60,18 @@ class TransactionAdmin(admin.ModelAdmin):
         ),
         ("Financial", {"fields": ("transaction_date", "transaction_amount")}),
         (
+            "Fees",
+            {
+                "fields": (
+                    "bz_partner_fee",
+                    "broker_fee",
+                    "service_fee",
+                    "dmv_fee",
+                    "discount",
+                )
+            },
+        ),
+        (
             "Timestamps",
             {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},
         ),
