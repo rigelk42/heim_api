@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "customer_management",
     "motor_vehicle_services",
+    "payments",
 ]
 
 MIDDLEWARE = [
